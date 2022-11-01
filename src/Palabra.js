@@ -52,7 +52,7 @@ class Palabra extends Letras {
    * @returns { this } La palabra duplicada.
    */
   clonar( texto = null ) {
-    if ( !texto ) texto = this.#original;
+    if ( !texto ) texto = this.bafer;
     // if ( !( texto instanceof String ) ) throw new Error( "TypeError: Expected type string but " + typeof texto + " was received" );
     const palabra = new Palabra( texto );
     palabra.#genero = this.#genero;
