@@ -77,6 +77,14 @@ class Letras {
   }
 
   /**
+   * Devuelve la segunda letra del conjunto de letras actual.
+   * @returns { Letra } La segunda letra del conjunto.
+   */
+  segundaLetra() {
+    return this.letra( 0 );
+  }
+
+  /**
    * Devuelve la penúltima letra del conjunto de letras actual.
    * @returns { Letra } La penúltima letra del conjunto.
    */
