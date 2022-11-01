@@ -4,7 +4,7 @@ Gramática: número, género y acentuación
 Librería de *JavaScript* que implementa las reglas gramaticales. Las clases y funciones disponibles sirven para pasar una palabra a plural, descomponer una palabra en sílabas, indicar si una palabra es aguda, llana, esdrújula o sobreesdrújula, entre otras cosas.
 
 ### Importante:
-No soy el autor original de éstal librería. Éste es solamente un port de la librería original [Leus: Gramática](https://github.com/leus/gramatica) que hice para *JavaScript* y que está pensado para seguir completándose y haciéndose más robusto para ser implementado en cualquier proyecto en el que sea útil.
+No soy el autor original de ésta librería. Éste es solamente un port de la librería original [Leus: Gramática](https://github.com/leus/gramatica) que hice para *JavaScript*. La librería está pensada para seguir completándose, hacerse más robusta y poder ser implementada en cualquier proyecto en la que sea útil.
 
 Ejemplos de uso:
 
