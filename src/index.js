@@ -1,0 +1,12 @@
+exports.Abecedario  = require( "./Abecedario.js" );
+exports.Acentuacion = require( "./Acentuacion.js" );
+exports.Articulo    = require( "./Articulo.js" );
+exports.Genero      = require( "./Genero.js" );
+exports.Gramatica   = require( "./Gramatica.js" );
+exports.Letra       = require( "./Letra.js" );
+exports.Letras      = require( "./Letras.js" );
+exports.Numero      = require( "./Numero.js" );
+exports.Palabra     = require( "./Palabra.js" );
+exports.Palabras    = require( "./Palabras.js" );
+exports.Preposicion = require( "./Preposicion.js" );
+exports.Silabas     = require( "./Silabas.js" );

@@ -1,0 +1,22 @@
+{
+  "name": "gramatica",
+  "version": "1.0.0",
+  "description": "Librería de JavaScript que implementa las reglas gramaticales.",
+  "main": "/src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanLop618/gramatica.git"
+  },
+  "keywords": [
+    "gramatica"
+  ],
+  "author": "danlop_",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DanLop618/gramatica/issues"
+  },
+  "homepage": "https://github.com/DanLop618/gramatica#readme"
+}
