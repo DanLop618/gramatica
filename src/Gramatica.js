@@ -28,7 +28,7 @@ class Gramatica {
   /**
    * Devuelve las sílabas de la palabra ingresada.
    * @param { string } palabra La palabra a verificar.
-   * @returns { Silabas } Las sílabas de la palabra.
+   * @returns { string } Las sílabas de la palabra.
    * @throws { ParamError }
    */
   static silabas( palabra ) {
