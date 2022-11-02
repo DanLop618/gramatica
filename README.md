@@ -27,15 +27,19 @@ Código JavaScript
     -   Número y género de las palabras: [Palabra](https://github.com/DanLop618/gramatica/blob/main/src/Palabra.js)
     -   Lista de palabras: [Palabras](https://github.com/DanLop618/gramatica/blob/main/src/Palabras.js)
 
+Implementaciones Futuras
+------------------------
+- Verificación de verbos.
+- Detección de tipos de verbos. *(regulares e irregulares)*
+- Conversión de verbos a diferentes tiempos verbales. *(presente, pasado, futuro, etc...)*
+- Validación de existencia de palabras mediante la RAE. *(async|Promise)*
+- Implementaciones de la comunidad.
+
 Colaboraciones
 --------------
 Todas las colaboraciones, ideas e implementaciones son totalmente bienvenidas. Si tienes algo qué implementar en el proyecto solo haz un *fork* del mismo, realiza los cambios que desees y envía un *pull-request* desde tu repositorio. Si el código/implementación cumple con lo necesario será implementado con brevedad.
 
-Autor Original (Java)
----------------------
-Francisco Cascales - https://proinf.net/
-
-Licencia
---------
-
+Información Extra
+-----------------
+[Francisco Cascales](https://proinf.net/)
 Este proyecto es distribuido usando la [Licencia Mozilla 2.0](http://mozilla.org/MPL/2.0/).
