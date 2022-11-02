@@ -5,97 +5,100 @@
  */
 
 // Importaciones.
+const Enum          = require( "./misc/Enum.js" );
 const Palabra       = require( "./Palabra.js" );
 const Terminacion   = require( "./misc/Terminacion.js" );
 const Terminaciones = require( "./misc/Terminaciones.js" );
-const InstanceError = require( "./misc/InstanceError.js" );
 const ParamError    = require( "./misc/ParamError.js" );
 
-class Genero {
+class Genero extends Enum {
+
+  /**
+   * Constructores de géneros gramaticales.
+   */
+  static neutro    = new Genero( "neutro", 0 );
+  static masculino = new Genero( "masculino", 1 );
+  static femenino  = new Genero( "femenino", 2 );
 
   /**
    * Tipos de géneros gramaticales.
    */
-  static #terminacionesSingulares = new Terminaciones();
-  static #terminacionesPlurales = new Terminaciones();
-  #generos = [ "neutro", "masculino", "femenino" ];
-  #ordinal;
-  #genero;
+  static terminacionesSingulares = new Terminaciones();
+  static terminacionesPlurales = new Terminaciones();
 
   // Añadimos las terminaciones singulares.
   static {
-    this.#terminacionesSingulares.agregar( "umbre", new Genero( "femenino" ) );
-    this.#terminacionesSingulares.agregar( "triz", new Genero( "femenino" ) );
-    this.#terminacionesSingulares.agregar( "icie", new Genero( "femenino" ) );
-    this.#terminacionesSingulares.agregar( "esa", new Genero( "femenino" ) );
-    this.#terminacionesSingulares.agregar( "isa", new Genero( "femenino" ) );
-    this.#terminacionesSingulares.agregar( "ína", new Genero( "femenino" ) );
-    this.#terminacionesSingulares.agregar( "ión", new Genero( "femenino" ), "anfitrión", "aluvión", "avión", "camión", "centurión", "embrión", "gorrión", "guión" );
-    this.#terminacionesSingulares.agregar( "dad", new Genero( "femenino" ), "abad" );
-    this.#terminacionesSingulares.agregar( "tad", new Genero( "femenino" ) );
-    this.#terminacionesSingulares.agregar( "tud", new Genero( "femenino" ) );
-    this.#terminacionesSingulares.agregar( "ies", new Genero( "femenino" ) );
-    this.#terminacionesSingulares.agregar( "ud", new Genero( "femenino" ), "alud" );
-    this.#terminacionesSingulares.agregar( "ez", new Genero( "femenino" ), "ajedrez", "juez", "pez", "diez" );
-    this.#terminacionesSingulares.agregar( "is", new Genero( "femenino" ), "análisis", "chasis", "cutis", "dieciséis", "frontis", "iris", "parchís", "paréntesis", "pubis", "seis", "tenis" );
-    this.#terminacionesSingulares.agregar( "ma", new Genero( "masculino" ), "alma", "ama", "ánima", "apotema", "arma", "cama", "forma" );
-    this.#terminacionesSingulares.agregar( "o", new Genero( "masculino" ), "dinamo", "mano", "radio", "seo" );
-    this.#terminacionesSingulares.agregar( "a", new Genero( "femenino" ), "capicúa", "día", "futbolista", "koala", "mapa", "poeta" );
-    this.#terminacionesSingulares.agregar( "z", new Genero( "femenino" ), "haz", "lápiz", "tamiz", "avestruz", "regaliz", "maíz" );
-    this.#terminacionesSingulares.agregar( "e", new Genero( "masculino" ), "base", "clase", "clave", "constante", "corriente", "debacle", "elipse", "espiral", "falange", "fase", "fe", "fiebre", "frase", "frente", "fuente", "gente", "hélice", "higiene", "ingle", "leche", "lente", "liebre", "llave", "madre", "masacre", "muerte", "nave", "nieve", "noche", "nube", "patente", "peste", "plebe", "sangre", "serie", "serpiente", "suerte", "tele", "tilde", "torre", "ubre", "variable" );
-    this.#terminacionesSingulares.agregar( "l", new Genero( "masculino" ), "cal", "cárcel", "col", "diagonal", "espiral", "hiel", "integral", "miel", "moral", "sal", "señal", "versal" );
-    this.#terminacionesSingulares.agregar( "n", new Genero( "masculino" ), "crin", "desazón", "imagen", "razón", "sartén", "sinrazón", "virgen" );
-    this.#terminacionesSingulares.agregar( "r", new Genero( "masculino" ), "coliflor", "flor", "mujer", "sor" );
-    this.#terminacionesSingulares.agregar( "s", new Genero( "masculino" ), "diabetes", "res", "tos", "venus" );
-    this.#terminacionesSingulares.agregar( "á", new Genero( "masculino" ), "mamá" );
-    this.#terminacionesSingulares.agregar( "é", new Genero( "masculino" ), "matiné" );
-    this.#terminacionesSingulares.agregar( "í", new Genero( "masculino" ) );
-    this.#terminacionesSingulares.agregar( "ó", new Genero( "masculino" ), "gogó" );
-    this.#terminacionesSingulares.agregar( "ú", new Genero( "masculino" ) );
-    this.#terminacionesSingulares.agregar( null, new Genero( "masculino" ), "ram", "red", "sed", "web" ); // Excepciones femeninas
-    this.#terminacionesSingulares.agregar( null, new Genero( "femenino" ), "rey", "reloj", "ardid", "hábitat", "robot" ); // Excepciones masculinas
+    this.terminacionesSingulares.agregar( "umbre", Genero.femenino );
+    this.terminacionesSingulares.agregar( "triz", Genero.femenino );
+    this.terminacionesSingulares.agregar( "icie", Genero.femenino );
+    this.terminacionesSingulares.agregar( "esa", Genero.femenino );
+    this.terminacionesSingulares.agregar( "isa", Genero.femenino );
+    this.terminacionesSingulares.agregar( "ína", Genero.femenino );
+    this.terminacionesSingulares.agregar( "ión", Genero.femenino, "anfitrión", "aluvión", "avión", "camión", "centurión", "embrión", "gorrión", "guión" );
+    this.terminacionesSingulares.agregar( "dad", Genero.femenino, "abad" );
+    this.terminacionesSingulares.agregar( "tad", Genero.femenino );
+    this.terminacionesSingulares.agregar( "tud", Genero.femenino );
+    this.terminacionesSingulares.agregar( "ies", Genero.femenino );
+    this.terminacionesSingulares.agregar( "ud", Genero.femenino, "alud" );
+    this.terminacionesSingulares.agregar( "ez", Genero.femenino, "ajedrez", "juez", "pez", "diez" );
+    this.terminacionesSingulares.agregar( "is", Genero.femenino, "análisis", "chasis", "cutis", "dieciséis", "frontis", "iris", "parchís", "paréntesis", "pubis", "seis", "tenis" );
+    this.terminacionesSingulares.agregar( "ma", Genero.masculino, "alma", "ama", "ánima", "apotema", "arma", "cama", "forma" );
+    this.terminacionesSingulares.agregar( "o", Genero.masculino, "dinamo", "mano", "radio", "seo" );
+    this.terminacionesSingulares.agregar( "a", Genero.femenino, "capicúa", "día", "futbolista", "koala", "mapa", "poeta" );
+    this.terminacionesSingulares.agregar( "z", Genero.femenino, "haz", "lápiz", "tamiz", "avestruz", "regaliz", "maíz" );
+    this.terminacionesSingulares.agregar( "e", Genero.masculino, "base", "clase", "clave", "constante", "corriente", "debacle", "elipse", "espiral", "falange", "fase", "fe", "fiebre", "frase", "frente", "fuente", "gente", "hélice", "higiene", "ingle", "leche", "lente", "liebre", "llave", "madre", "masacre", "muerte", "nave", "nieve", "noche", "nube", "patente", "peste", "plebe", "sangre", "serie", "serpiente", "suerte", "tele", "tilde", "torre", "ubre", "variable" );
+    this.terminacionesSingulares.agregar( "l", Genero.masculino, "cal", "cárcel", "col", "diagonal", "espiral", "hiel", "integral", "miel", "moral", "sal", "señal", "versal" );
+    this.terminacionesSingulares.agregar( "n", Genero.masculino, "crin", "desazón", "imagen", "razón", "sartén", "sinrazón", "virgen" );
+    this.terminacionesSingulares.agregar( "r", Genero.masculino, "coliflor", "flor", "mujer", "sor" );
+    this.terminacionesSingulares.agregar( "s", Genero.masculino, "diabetes", "res", "tos", "venus" );
+    this.terminacionesSingulares.agregar( "á", Genero.masculino, "mamá" );
+    this.terminacionesSingulares.agregar( "é", Genero.masculino, "matiné" );
+    this.terminacionesSingulares.agregar( "í", Genero.masculino );
+    this.terminacionesSingulares.agregar( "ó", Genero.masculino, "gogó" );
+    this.terminacionesSingulares.agregar( "ú", Genero.masculino );
+    this.terminacionesSingulares.agregar( null, Genero.masculino, "ram", "red", "sed", "web" ); // Excepciones femeninas
+    this.terminacionesSingulares.agregar( null, Genero.femenino, "rey", "reloj", "ardid", "hábitat", "robot" ); // Excepciones masculinas
   }
 
   // Añadimos las terminaciones plurales.
   static {
-    this.#terminacionesPlurales.agregar( "umbres", new Genero( "femenino" ) );
-    this.#terminacionesPlurales.agregar( "trices", new Genero( "femenino" ) );
-    this.#terminacionesPlurales.agregar( "icies", new Genero( "femenino" ) );
-    this.#terminacionesPlurales.agregar( "iones", new Genero( "femenino" ), "aviones", "camiones" );
-    this.#terminacionesPlurales.agregar( "dades", new Genero( "femenino" ) );
-    this.#terminacionesPlurales.agregar( "tades", new Genero( "femenino" ) );
-    this.#terminacionesPlurales.agregar( "tudes", new Genero( "femenino" ) );
-    this.#terminacionesPlurales.agregar( "ieses", new Genero( "femenino" ) );
-    this.#terminacionesPlurales.agregar( "esas", new Genero( "femenino" ) );
-    this.#terminacionesPlurales.agregar( "isas", new Genero( "femenino" ) );
-    this.#terminacionesPlurales.agregar( "inas", new Genero( "femenino" ) );
-    this.#terminacionesPlurales.agregar( "udes", new Genero( "femenino" ), "aludes" );
-    this.#terminacionesPlurales.agregar( "eces", new Genero( "femenino" ), "dieces", "haces", "peces" );
-    this.#terminacionesPlurales.agregar( "ces", new Genero( "femenino" ), "avestruces", "jueces", "lápices", "tamices" );
-    this.#terminacionesPlurales.agregar( "mas", new Genero( "masculino" ), "almas", "amas", "ánimas", "apotemas", "armas", "camas", "formas" );
-    this.#terminacionesPlurales.agregar( "les", new Genero( "masculino" ), "cárceles", "coles", "espirales", "integrales", "mieles", "sales", "señales", "variables", "versales" );
-    this.#terminacionesPlurales.agregar( "nes", new Genero( "masculino" ), "crines", "razones", "sartenes" );
-    this.#terminacionesPlurales.agregar( "res", new Genero( "masculino" ), "flores", "liebres", "madres", "mujeres", "torres" );
-    this.#terminacionesPlurales.agregar( "ses", new Genero( "masculino" ), "bases", "clases", "elipses", "frases", "reses", "toses" );
-    this.#terminacionesPlurales.agregar( "os", new Genero( "masculino" ), "dinamos", "manos", "radios", "seos" );
-    this.#terminacionesPlurales.agregar( "as", new Genero( "femenino" ), "días", "koalas", "mapas", "poetas" );
-    this.#terminacionesPlurales.agregar( "es", new Genero( "masculino" ), "claves", "constantes", "fes", "fuentes", "leches", "llaves", "muertes", "naves", "pestes", "redes", "series" );
-    this.#terminacionesPlurales.agregar( "ás", new Genero( "masculino" ), "mamás" );
-    this.#terminacionesPlurales.agregar( "és", new Genero( "masculino" ) );
-    this.#terminacionesPlurales.agregar( "ís", new Genero( "masculino" ) );
-    this.#terminacionesPlurales.agregar( "ó", new Genero( "masculino" ) );
-    this.#terminacionesPlurales.agregar( "ús", new Genero( "masculino" ) );
+    this.terminacionesPlurales.agregar( "umbres", Genero.femenino );
+    this.terminacionesPlurales.agregar( "trices", Genero.femenino );
+    this.terminacionesPlurales.agregar( "icies", Genero.femenino );
+    this.terminacionesPlurales.agregar( "iones", Genero.femenino, "aviones", "camiones" );
+    this.terminacionesPlurales.agregar( "dades", Genero.femenino );
+    this.terminacionesPlurales.agregar( "tades", Genero.femenino );
+    this.terminacionesPlurales.agregar( "tudes", Genero.femenino );
+    this.terminacionesPlurales.agregar( "ieses", Genero.femenino );
+    this.terminacionesPlurales.agregar( "esas", Genero.femenino );
+    this.terminacionesPlurales.agregar( "isas", Genero.femenino );
+    this.terminacionesPlurales.agregar( "inas", Genero.femenino );
+    this.terminacionesPlurales.agregar( "udes", Genero.femenino, "aludes" );
+    this.terminacionesPlurales.agregar( "eces", Genero.femenino, "dieces", "haces", "peces" );
+    this.terminacionesPlurales.agregar( "ces", Genero.femenino, "avestruces", "jueces", "lápices", "tamices" );
+    this.terminacionesPlurales.agregar( "mas", Genero.masculino, "almas", "amas", "ánimas", "apotemas", "armas", "camas", "formas" );
+    this.terminacionesPlurales.agregar( "les", Genero.masculino, "cárceles", "coles", "espirales", "integrales", "mieles", "sales", "señales", "variables", "versales" );
+    this.terminacionesPlurales.agregar( "nes", Genero.masculino, "crines", "razones", "sartenes" );
+    this.terminacionesPlurales.agregar( "res", Genero.masculino, "flores", "liebres", "madres", "mujeres", "torres" );
+    this.terminacionesPlurales.agregar( "ses", Genero.masculino, "bases", "clases", "elipses", "frases", "reses", "toses" );
+    this.terminacionesPlurales.agregar( "os", Genero.masculino, "dinamos", "manos", "radios", "seos" );
+    this.terminacionesPlurales.agregar( "as", Genero.femenino, "días", "koalas", "mapas", "poetas" );
+    this.terminacionesPlurales.agregar( "es", Genero.masculino, "claves", "constantes", "fes", "fuentes", "leches", "llaves", "muertes", "naves", "pestes", "redes", "series" );
+    this.terminacionesPlurales.agregar( "ás", Genero.masculino, "mamás" );
+    this.terminacionesPlurales.agregar( "és", Genero.masculino );
+    this.terminacionesPlurales.agregar( "ís", Genero.masculino );
+    this.terminacionesPlurales.agregar( "ó", Genero.masculino );
+    this.terminacionesPlurales.agregar( "ús", Genero.masculino );
   }
 
   /**
-   * Inicializa un objeto <Genero> que emula un <enum> de Java.
-   * @param { string } genero El tipo de genero interno de la clase.
-   * @throws { InstanceError } Si el genero recibido no forma parte de la colección.
+   * Inicializa un objeto <Genero> que emula un ENUM.
+   * @param { string } value El género interno de la clase.
+   * @param { int } ordinal El número posicional del género.
+   * @returns { Genero }
    */
-  constructor( genero ) {
-    if ( !this.#generos.includes( genero ) ) throw new InstanceError( this.#generos, genero );
-    this.#ordinal = this.#generos.indexOf( genero );
-    this.#genero = genero;
+  constructor( value, ordinal ) {
+    super( value, ordinal );
   }
 
   /**
@@ -106,15 +109,15 @@ class Genero {
    */
   static segunPalabra( palabra ) {
     if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
-    if ( palabra.estaVacia() ) return new Genero( "neutro" );
-    if ( palabra.primeraLetra().esDigito() ) return new Genero( "masculino" );
-    if ( palabra.numeroLetras() === 1 ) return new Genero( "femenino" );
-    const terminaciones = palabra.numero().esPlural() ? Genero.#terminacionesPlurales : Genero.#terminacionesSingulares;
+    if ( palabra.estaVacia() ) return Genero.neutro;
+    if ( palabra.primeraLetra().esDigito() ) return Genero.masculino;
+    if ( palabra.numeroLetras() === 1 ) return Genero.femenino;
+    const terminaciones = palabra.numero().esPlural() ? Genero.terminacionesPlurales : Genero.terminacionesSingulares;
     for ( const terminacion of terminaciones ) {
       if ( terminacion.esExcepcion( palabra ) ) return terminacion.genero.contrario();
       if ( terminacion.de( palabra ) ) return terminacion.genero;
     }
-    return new Genero( "masculino" );
+    return Genero.masculino;
   }
 
   /**
@@ -139,7 +142,7 @@ class Genero {
    * @returns { boolean } Si el género es masculino.
    */
   esMasculino() {
-    return this.#genero === "masculino";
+    return this.value === "masculino";
   }
 
   /**
@@ -147,7 +150,7 @@ class Genero {
    * @returns { boolean } Si el género es femenino.
    */
   esFemenino() {
-    return this.#genero === "femenino";
+    return this.value === "femenino";
   }
 
   /**
@@ -155,7 +158,7 @@ class Genero {
    * @returns { boolean } Si el género es néutro.
    */
   esNeutro() {
-    return this.#genero === "neutro";
+    return this.value === "neutro";
   }
 
   /**
@@ -163,25 +166,9 @@ class Genero {
    * @returns { this } El género contrario.
    */
   contrario() {
-    if ( this.esMasculino() ) return new Genero( "masculino" );
-    if ( this.esFemenino() ) return new Genero( "femenino" );
-    return new Genero( "neutro" );
-  }
-
-  /**
-   * Obtiene el tipo de género en forma de string.
-   * @returns { string } El tipo de acento.
-   */
-  toString() {
-    return this.#genero;
-  }
-
-  /**
-   * Obtiene el ordinal del tipo de género.
-   * @returns { int } El ordinal del tipo de género.
-   */
-  ordinal() {
-    return this.#ordinal;
+    if ( this.esMasculino() ) return Genero.femenino;
+    if ( this.esFemenino() ) return Genero.masculino;
+    return Genero.neutro;
   }
 }
 

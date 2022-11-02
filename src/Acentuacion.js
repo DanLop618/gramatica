@@ -5,26 +5,26 @@
  */
 
 // Importaciones
-const InstanceError = require( "./misc/InstanceError.js" );
+const Enum = require( "./misc/Enum.js" );
 
-class Acentuacion {
-
-  /**
-   * Acentos gramaticales.
-   */
-  #acentos = [ "aguda", "llana", "esdrújula", "sobreesdrújula" ];
-  #ordinal;
-  #acento;
+class Acentuacion extends Enum {
 
   /**
-   * Inicializa un objeto <Acento> que emula un <enum> de Java.
-   * @param { string } acento El tipo de acento interno de la clase.
-   * @throws { InstanceError } Si el acento recibido no forma parte de la colección.
+   * Constructores de acentos gramaticales.
    */
-  constructor( acento ) {
-    if ( !this.#acentos.includes( acento ) ) throw new InstanceError( this.#acentos, acento );
-    this.#ordinal = this.#acentos.indexOf( acento );
-    this.#acento = acento;
+  static aguda          = new Acentuacion( "aguda", 0 );
+  static llana          = new Acentuacion( "llana", 1 );
+  static esdrújula      = new Acentuacion( "esdrújula", 2 );
+  static sobreesdrújula = new Acentuacion( "sobreesdrújula", 3 );
+
+  /**
+   * Inicializa un objeto <Acentiacion> que emula un ENUM.
+   * @param { string } value La acentuación interna de la clase.
+   * @param { int } ordinal El número posicional de la acentuación.
+   * @returns { Acentuacion }
+   */
+  constructor( value, ordinal ) {
+    super( value, ordinal );
   }
 
   /**
@@ -32,7 +32,7 @@ class Acentuacion {
    * @returns { boolean } Si el acento es agudo
    */
   esAguda() {
-    return this.#acento === "aguda";
+    return this.value === "aguda";
   }
 
   /**
@@ -40,7 +40,7 @@ class Acentuacion {
    * @returns { boolean } Si el acento es llano
    */
   esLlana() {
-    return this.#acento === "llana";
+    return this.value === "llana";
   }
 
   /**
@@ -48,7 +48,7 @@ class Acentuacion {
    * @returns { boolean } Si el acento es esdrújulo
    */
   esEsdrujula() {
-    return this.#acento === "esdrújula";
+    return this.value === "esdrújula";
   }
 
   /**
@@ -56,23 +56,7 @@ class Acentuacion {
    * @returns { boolean } Si el acento es sobreesdrújulo
    */
   esSobreesdrujula() {
-    return this.#acento === "sobreesdrújula";
-  }
-
-  /**
-   * Obtiene el tipo de acento en forma de string.
-   * @returns { string } El tipo de acento.
-   */
-  toString() {
-    return this.#acento;
-  }
-
-  /**
-   * Obtiene el ordinal del tipo de acento.
-   * @returns { int } El ordinal del tipo de acento.
-   */
-  ordinal() {
-    return this.#ordinal;
+    return this.value === "sobreesdrújula";
   }
 }
 

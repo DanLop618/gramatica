@@ -5,18 +5,24 @@
  */
 
 // Importaciones.
-const InstanceError = require( "./misc/InstanceError.js" );
-const ParamError    = require( "./misc/ParamError.js" );
+const ParamError = require( "./misc/ParamError.js" );
+const Enum    = require( "./misc/Enum.js" );
 const Palabra = require( "./Palabra.js" );
 const Genero  = require( "./Genero.js" );
 const Numero  = require( "./Numero.js" );
 
-class Articulo {
+class Articulo extends Enum {
+
+  /**
+   * Constructores de articulos gramaticales.
+   */
+  static determinado   = new Articulo( "determinado", 0 );
+  static indeterminado = new Articulo( "indeterminado", 1 );
 
   /**
    * Tipos de articulos gramaticales.
    */
-  static #articulos = [
+  static articulos = [
     [ // Definidos
       [ "lo", "los" ], // Neutro: singular y plural
       [ "el", "los" ], // Másculino: singular y plural
@@ -28,19 +34,15 @@ class Articulo {
       [ "una", "unas" ], // Femenino: singular y plural
     ],
   ];
-  #tipos = [ "determinado", "indeterminado" ];
-  #tipo;
-  #ordinal;
 
   /**
-   * Inicializa un objeto <Articulo> que emula un <enum> de Java.
-   * @param { string } acento El tipo de articulo interno de la clase.
-   * @throws { InstanceError } Si el articulo recibido no forma parte de la colección.
+   * Inicializa un objeto <Articulo> que emula un ENUM.
+   * @param { string } value El articulo interno de la clase.
+   * @param { int } ordinal El número posicional del articulo.
+   * @returns { Articulo }
    */
-  constructor( tipo ) {
-    if ( !this.#tipos.includes( tipo ) ) throw new InstanceError( this.#tipos, tipo );
-    this.#ordinal = this.#tipos.indexOf( tipo );
-    this.#tipo = tipo;
+  constructor( value, ordinal ) {
+    super( value, ordinal );
   }
 
   /**
@@ -51,7 +53,7 @@ class Articulo {
    */
   static es( palabra ) {
     if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
-    for ( const lista of Articulo.#articulos )
+    for ( const lista of Articulo.articulos )
       for ( const sublista of lista )
         for ( const elemento of sublista )
           if ( palabra.es( elemento ) ) return true;
@@ -63,7 +65,7 @@ class Articulo {
    * @returns { boolean } Si el articulo es determinado.
    */
   esDeterminado() {
-    return this.#tipo === "determinado";
+    return this.value === "determinado";
   }
 
   /**
@@ -71,7 +73,7 @@ class Articulo {
    * @returns { boolean } Si el articulo es indeterminado.
    */
   esIndeterminado() {
-    return this.#tipo === "indeterminado";
+    return this.value === "indeterminado";
   }
 
   /**
@@ -84,7 +86,7 @@ class Articulo {
   obtener( genero, numero ) {
     if ( !( genero instanceof Genero ) ) throw new ParamError( "Genero" );
     if ( !( numero instanceof Numero ) ) throw new ParamError( "Numero" );
-    return Articulo.#articulos[ this.#ordinal ][ genero.ordinal() ][ numero.ordinal() ];
+    return Articulo.articulos[ this.ordinal ][ genero.ordinal ][ numero.ordinal ];
   }
 
   /**
@@ -108,6 +110,7 @@ class Articulo {
     if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
     return this.segunPalabra( palabra ) + " " + palabra;
   }
+
   /**
    * Indica si el articulo se conjunta con la preposición 'a' o 'de'.
    * @param { Palabra } palabra La palabra a verificar.
@@ -119,22 +122,6 @@ class Articulo {
     return this.esDeterminado()
       && palabra.generoAntepuesto().esMasculino()
       && palabra.numero().esSingular();
-  }
-
-  /**
-   * Obtiene el tipo de articulo en forma de string.
-   * @returns { string } El tipo de articulo.
-   */
-  toString() {
-    return this.#tipo;
-  }
-
-  /**
-   * Obtiene el ordinal del tipo de articulo.
-   * @returns { int } El ordinal del tipo de articulo.
-   */
-  ordinal() {
-    return this.#ordinal;
   }
 }
 

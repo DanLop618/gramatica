@@ -5,20 +5,23 @@
  */
 
 // Importaciones
+const Enum    = require( "./misc/Enum.js" );
 const Palabra = require( "./Palabra.js" );
-const InstanceError = require( "./misc/InstanceError.js" );
-const ParamError    = require( "./misc/ParamError.js" );
+const ParamError = require( "./misc/ParamError.js" );
 
-class Numero {
+class Numero extends Enum {
 
   /**
-   * Tipos de numeración gramatical.
+   * Constructores de número gramatical
    */
-  #tipos = [ "singular", "plural" ];
-  #tipo;
-  #ordinal;
-  static #excepcionesPlurales = [];
-  static #excepcionesSingulares = [
+  static singular = new Numero( "singular", 0 );
+  static plural   = new Numero( "plural", 0 );
+
+  /**
+  * Excepciones a la regla.
+  */
+  static excepcionesPlurales   = [];
+  static excepcionesSingulares = [
 
     // Números:
     "dos", "tres", "seis", "dieciséis",
@@ -47,14 +50,13 @@ class Numero {
   ];
 
   /**
-   * Inicializa un objeto <Numero> que emula un <enum> de Java.
-   * @param { string } tipo El tipo de numeracion interno de la clase.
-   * @throws { InstanceError } Si la numeracion recibida no forma parte de la colección.
+   * Inicializa un objeto <Numero> que emula un ENUM.
+   * @param { string } value El número gramatical interno de la clase.
+   * @param { int } ordinal El número posicional del número gramatical.
+   * @returns { Numero }
    */
-  constructor( tipo ) {
-    if ( !this.#tipos.includes( tipo ) ) throw new InstanceError( this.#tipos, tipo );
-    this.#ordinal = this.#tipos.indexOf( tipo );
-    this.#tipo = tipo;
+  constructor( value, ordinal ) {
+    super( value, ordinal );
   }
 
   /**
@@ -65,14 +67,14 @@ class Numero {
    */
   static segunPalabra( palabra ) {
     if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
-    const singulares = this.#excepcionesSingulares;
-    const plurales   = this.#excepcionesPlurales;
-    if ( palabra.estaVacia() ) return new Numero( "singular" );
-    if ( palabra.es( ...singulares ) ) return new Numero( "singular" );
-    if ( palabra.es( ...plurales ) ) return new Numero( "plural" );
-    if ( palabra.acabaEn( "nés" ) ) return new Numero( "singular" );
-    if ( palabra.ultimaLetra().es( 's' ) ) return new Numero( "plural" );
-    return new Numero( "singular" );
+    const singulares = this.excepcionesSingulares;
+    const plurales   = this.excepcionesPlurales;
+    if ( palabra.estaVacia() ) return Numero.singular;
+    if ( palabra.es( ...singulares ) ) return Numero.singular;
+    if ( palabra.es( ...plurales ) ) return Numero.plural;
+    if ( palabra.acabaEn( "nés" ) ) return Numero.singular;
+    if ( palabra.ultimaLetra().es( 's' ) ) return Numero.plural;
+    return Numero.singular;
   }
 
   /**
@@ -80,7 +82,7 @@ class Numero {
    * @returns { boolean } Si es singular.
    */
   esSingular() {
-    return this.#tipo === "singular";
+    return this.value === "singular";
   }
 
   /**
@@ -88,23 +90,7 @@ class Numero {
    * @returns { boolean } Si es plural.
    */
   esPlural() {
-    return this.#tipo === "plural";
-  }
-
-  /**
-   * Obtiene el tipo de numeracion en forma de string.
-   * @returns { string } El tipo de numeracion.
-   */
-  toString() {
-    return this.#tipo;
-  }
-
-  /**
-   * Obtiene el ordinal del tipo de numeración gramatical.
-   * @returns { int } El ordinal del tipo de numeración.
-   */
-  ordinal() {
-    return this.#ordinal;
+    return this.value === "plural";
   }
 }
 

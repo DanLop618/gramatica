@@ -5,32 +5,33 @@
  */
 
 // Importaciones
+const Enum    = require( "./misc/Enum.js" );
 const Palabra = require( "./Palabra.js" );
-const InstanceError = require( "./misc/InstanceError.js" );
-const ParamError    = require( "./misc/ParamError.js" );
+const ParamError = require( "./misc/ParamError.js" );
 
-class Preposicion {
-
-  /**
-   * Tipos de preposición.
-   */
-  #tipos = [
-    "a", "allende", "ante", "aquende", "bajo", "cabe", "con", "contra", "de",
-    "desde", "durante", "en", "entre", "excepto", "hacia", "hasta", "mediante",
-    "para", "por", "pro", "según", "sin", "so", "sobre", "tras", "versus", "vía"
-  ];
-  #ordinal;
-  #tipo;
+class Preposicion extends Enum {
 
   /**
-   * Inicializa un objeto <Preposicion> que emula un <enum> de Java.
-   * @param { string } tipo El tipo de preposición interno de la clase.
-   * @throws { InstanceError } Si la preposición recibida no forma parte de la colección.
+   * Constructores de preposiciones gramaticales.
    */
-  constructor( tipo ) {
-    if ( !this.#tipos.includes( tipo ) ) throw new InstanceError( this.#tipos, tipo );
-    this.#ordinal = this.#tipos.indexOf( tipo );
-    this.#tipo = tipo;
+  static a = new Preposicion( "a", 0 );             static allende = new Preposicion( "allende", 1 );    static ante = new Preposicion( "ante", 2 );
+  static aquende = new Preposicion( "aquende", 3 ); static bajo = new Preposicion( "bajo", 4 );          static cabe = new Preposicion( "cabe", 5 );
+  static con = new Preposicion( "con", 6 );         static contra = new Preposicion( "contra", 7 );      static de = new Preposicion( "de", 8 );
+  static desde = new Preposicion( "desde", 9 );     static durante = new Preposicion( "durante", 10 );   static en = new Preposicion( "en", 11 );
+  static entre = new Preposicion( "entre", 12 );    static excepto = new Preposicion( "excepto", 13 );   static hacia = new Preposicion( "hacia", 14 );
+  static hasta = new Preposicion( "hasta", 15 );    static mediante = new Preposicion( "mediante", 16 ); static para = new Preposicion( "para", 17 );
+  static por = new Preposicion( "por", 18 );        static pro = new Preposicion( "pro", 19 );           static según = new Preposicion( "según", 20 );
+  static sin = new Preposicion( "sin", 21 );        static so = new Preposicion( "so", 22 );             static sobre = new Preposicion( "sobre", 23 );
+  static tras = new Preposicion( "tras", 24 );      static versus = new Preposicion( "versus", 25 );     static vía = new Preposicion( "vía", 26 );
+
+  /**
+   * Inicializa un objeto <Preposicion> que emula un ENUM.
+   * @param { string } value La preposición interno de la clase.
+   * @param { int } ordinal El número posicional de la preposición.
+   * @returns { Numero }
+   */
+  constructor( value, ordinal ) {
+    super( value, ordinal );
   }
 
   /**
@@ -41,25 +42,9 @@ class Preposicion {
    */
   static es( palabra ) {
     if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
-    for ( const preposicion of this.#tipos )
+    for ( const preposicion of Object.keys( Preposicion ) )
       if ( preposicion === palabra.toString().toLowerCase() ) return true;
     return false;
-  }
-
-  /**
-   * Obtiene tipo de preposicion en forma de string.
-   * @returns { string } El tipo de preposición.
-   */
-  toString() {
-    return this.#tipo;
-  }
-
-  /**
-   * Obtiene el ordinal del tipo de preposición.
-   * @returns { int } El ordinal del tipo de preposición.
-   */
-  ordinal() {
-    return this.#ordinal;
   }
 }
 
