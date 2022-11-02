@@ -223,7 +223,7 @@ class Letras {
   empiezaPor( ...prefijos ) {
     for ( const prefijo of prefijos ) {
       if ( typeof prefijo != "string" ) throw new ParamError( "String" );
-      if ( this.bafer.startsWith( sufijo ) ) return true;
+      if ( this.bafer.startsWith( prefijo ) ) return true;
     }
     return false;
   }
@@ -234,7 +234,7 @@ class Letras {
    * @returns { boolean } Si uno de los conjuntos ingresados es idéntico al actual.
    * @throws { ParamError }
    */
-  es( ...[ argumentos ] ) {
+  es( argumentos ) {
     for ( const letras of argumentos ){
       if ( typeof letras === "string" ) {
         if ( letras === this.bafer ) return true;

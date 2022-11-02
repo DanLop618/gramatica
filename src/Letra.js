@@ -105,7 +105,7 @@ class Letra {
    * @returns { boolean } Si la letra es un digito.
    */
   esDigito() {
-    return !Number.isNaN( this.getChar() );
+    return Number.isInteger( Number.parseInt( this.getChar() ) );
   }
 
   /**

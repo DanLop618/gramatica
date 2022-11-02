@@ -7,6 +7,7 @@
 // Importaciones.
 const InstanceError = require( "./InstanceError.js" );
 const ParamError    = require( "./ParamError.js" );
+const Palabra = require( "../Palabra.js" );
 
 class Terminacion {
 
@@ -20,7 +21,7 @@ class Terminacion {
    * @param { Genero } genero El tipo de género de la terminación.
    * @param { string[] } excepciones Las excepciones a la regla.
    */
-  constructor( terminacion, genero, ...[ excepciones ] ) {
+  constructor( terminacion, genero, ...excepciones ) {
     this.excepciones = excepciones;
     this.terminacion = terminacion;
     this.genero = genero;
@@ -34,8 +35,10 @@ class Terminacion {
    */
   esExcepcion( palabra ) {
     if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
-    for ( const exception of excepciones )
+    for ( const excepcion of this.excepciones ) {
+      if ( !excepcion ) continue;
       if ( palabra.es( excepcion ) ) return true;
+    }
     return false;
   }
 

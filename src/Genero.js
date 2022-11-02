@@ -109,7 +109,7 @@ class Genero {
     if ( palabra.estaVacia() ) return new Genero( "neutro" );
     if ( palabra.primeraLetra().esDigito() ) return new Genero( "masculino" );
     if ( palabra.numeroLetras() === 1 ) return new Genero( "femenino" );
-    const terminaciones = palabra.numero().esPlural() ? terminacionesPlurales : terminacionesSingulares;
+    const terminaciones = palabra.numero().esPlural() ? Genero.#terminacionesPlurales : Genero.#terminacionesSingulares;
     for ( const terminacion of terminaciones ) {
       if ( terminacion.esExcepcion( palabra ) ) return terminacion.genero.contrario();
       if ( terminacion.de( palabra ) ) return terminacion.genero;
