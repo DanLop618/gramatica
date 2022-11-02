@@ -22,7 +22,7 @@ class Palabras {
    * @param { string[] | Palabras[] } palabras Las palabras del conjunto.
    * @throws { InstanceError } Si uno de los elementos recibidos no es del tipo <String | Palabra>.
    */
-  constructor( ...[ palabras ] ) {
+  constructor( ...palabras ) {
     for ( let palabra of palabras ) {
       if ( typeof palabra === "string" ) this.agregarPalabra( new Palabra( palabra ) );
       else if ( palabra instanceof Palabra ) this.agregarPalabra( palabra );
@@ -254,7 +254,7 @@ class Palabras {
    */
   unir( elementoUnion = ", ", maquillador = null ) {
     if ( typeof elementoUnion != "string" ) throw new ParamError( "String" );
-    if ( typeof maquillador != "function" ) throw new ParamError( "Function" );
+    if ( maquillador && typeof maquillador != "function" ) throw new ParamError( "Function" );
     let bafer = "";
     let texto = "";
     if ( !this.hayPalabras() ) return bafer;
