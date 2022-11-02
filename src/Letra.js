@@ -35,8 +35,8 @@ class Letra {
     Letras = require( "./Letras.js" );
 
     // Inicialización.
-    if ( !( letras instanceof Letras ) ) throw new InstanceError( null, null, "Letras" );
-    if ( typeof posicion != "number" ) throw new InstanceError( null, null, "Number" );
+    if ( !( letras instanceof Letras ) ) throw new InstanceError( "Letras" );
+    if ( typeof posicion != "number" ) throw new InstanceError( "Number" );
     this.#posicion = posicion;
     this.#letras = letras;
   }

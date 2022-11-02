@@ -27,7 +27,7 @@ class Letras {
     Letra = require( "./Letra.js" );
 
     // Inicialización.
-    if ( typeof letras != "string" ) throw new InstanceError( null, null, "String" );
+    if ( typeof letras != "string" ) throw new InstanceError( "String" );
     this.bafer = Letras.limpiar( letras );
   }
 

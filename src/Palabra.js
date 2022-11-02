@@ -34,7 +34,7 @@ class Palabra extends Letras {
     Silabas  = require( "./Silabas.js" );
 
     // Inicialización del objeto.
-    if ( typeof palabra != "string" ) throw new InstanceError( null, null, "String" );
+    if ( typeof palabra != "string" ) throw new InstanceError( "String" );
     super( palabra.toLowerCase() );
     this.#original = palabra;
     this.#silabas = null;

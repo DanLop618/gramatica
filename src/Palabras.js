@@ -26,7 +26,7 @@ class Palabras {
     for ( let palabra of palabras ) {
       if ( typeof palabra === "string" ) this.agregarPalabra( new Palabra( palabra ) );
       else if ( palabra instanceof Palabra ) this.agregarPalabra( palabra );
-      else throw new InstanceError( null, null, "String | Palabra" );
+      else throw new InstanceError( "String | Palabra" );
     }
   }
 

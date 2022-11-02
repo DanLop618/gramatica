@@ -27,7 +27,7 @@ class Silabas {
    * @throws { InstanceError } Si el elemento recibido no es de tipo <Palabra>.
    */
   constructor( palabra ) {
-    if ( !( palabra instanceof Palabra ) ) throw new InstanceError( null, null, "Palabra" );
+    if ( !( palabra instanceof Palabra ) ) throw new InstanceError( "Palabra" );
     this.#palabra = palabra;
     if ( palabra.hayVocales() ) {
       this.#procesar1_SepararVocalesDeConsonantes();
