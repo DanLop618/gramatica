@@ -5,7 +5,9 @@
  */
 
 // Importaciones
-const Letra = require( "./Letra.js" );
+const InstanceError = require( "./misc/InstanceError.js" );
+const ParamError    = require( "./misc/ParamError.js" );
+var Letra = null;
 
 class Letras {
 
@@ -14,8 +16,18 @@ class Letras {
    */
   bafer = null;
 
-  // Constructor
+  /**
+   * Inicializa un nuevo conjunto de Letras[Letra].
+   * @param { string } letras El conjunto de letras original al que pertenece.
+   * @throws { InstanceError } Si el genero recibido no forma parte de la colección.
+   */
   constructor( letras = "" ) {
+
+    // Carga de dependencias.
+    Letra = require( "./Letra.js" );
+
+    // Inicialización.
+    if ( typeof letras != "string" ) throw new InstanceError( null, null, "String" );
     this.bafer = Letras.limpiar( letras );
   }
 
@@ -23,8 +35,10 @@ class Letras {
    * Elimina los espacios en blanco del principio y final de las letras recibidas.
    * @param { string } letras Las letras recibidas.
    * @returns { string } Las letras limpias de espacios en blanco.
+   * @throws { ParamError }
    */
   static limpiar( letras = "" ) {
+    if ( typeof letras != "string" ) throw new ParamError( "String" );
     return letras.trim();
   }
 
@@ -32,21 +46,24 @@ class Letras {
    * Cambia el conjunto de letras por otro conjunto de letras.
    * @param { string } letras El conjunto de letras nuevo.
    * @returns { Letras } El nuevo conjunto de letras.
+   * @throws { ParamError }
    */
   cambiarPor( letras ) {
+    if ( typeof letras != "string" ) throw new ParamError( "String" );
     this.bafer = limpiar( letras );
     return this;
   }
 
   /**
    * Añade una letra al final del conjunto de letras.
-   * @param { * } letra La letra a añadir.
+   * @param { char | Letra } letra La letra a añadir.
    * @returns { Letras } El conjunto de letras actualizado.
+   * @throws { ParamError }
    */
   agregar( letra ) {
-    // if ( typeof letra != "string" && typeof letra != "Letra" ) throw new Error();
+    if ( typeof letra != "string" && !( letra instanceof Letra ) ) throw new ParamError( "String | Letra" );
     if ( typeof letra === "string" ) this.bafer += letra;
-    if ( typeof letra === "object"  ) this.bafer += letra.getChar();
+    else this.bafer += letra.getChar();
     return this;
   }
 
@@ -63,8 +80,10 @@ class Letras {
    * Devuelve la letra del conjunto de letras en la posición indicada.
    * @param { int } posicion La posición a evaluar.
    * @returns { Letra } La letra obtenida.
+   * @throws { ParamError }
    */
   letra( posicion ) {
+    if ( typeof posicion != "number" ) throw new ParamError( "Number" );
     return new Letra( this, posicion );
   }
 
@@ -185,9 +204,13 @@ class Letras {
    * Devuelve si el conjunto de letras termina con al menos una de las letras ingresadas.
    * @param { string[] } sufijos Las letras a comparar.
    * @returns { boolean } Si una de las letras ingresadas es la última del conjunto.
+   * @throws { ParamError }
    */
   acabaEn( ...sufijos ) {
-    for ( const sufijo of sufijos ) if ( this.bafer.endsWith( sufijo ) ) return true;
+    for ( const sufijo of sufijos ) {
+      if ( typeof sufijo != "string" ) throw new ParamError( "String" );
+      if ( this.bafer.endsWith( sufijo ) ) return true;
+    }
     return false;
   }
 
@@ -195,9 +218,13 @@ class Letras {
    * Devuelve si el conjunto de letras empieza con al menos una de las letras ingresadas.
    * @param { string[] } prefijos Las letras a comparar.
    * @returns { boolean } Si una de las letras ingresadas es la primera del conjunto.
+   * @throws { ParamError }
    */
   empiezaPor( ...prefijos ) {
-    for ( const prefijo of prefijos ) if ( this.bafer.startsWith( sufijo ) ) return true;
+    for ( const prefijo of prefijos ) {
+      if ( typeof prefijo != "string" ) throw new ParamError( "String" );
+      if ( this.bafer.startsWith( sufijo ) ) return true;
+    }
     return false;
   }
 
@@ -205,14 +232,15 @@ class Letras {
    * Devuelve si el conjunto de letras es igual a al menos uno de los conjuntos ingresados.
    * @param { * } argumentos Los argumentos recibidos.
    * @returns { boolean } Si uno de los conjuntos ingresados es idéntico al actual.
+   * @throws { ParamError }
    */
   es( ...[ argumentos ] ) {
     for ( const letras of argumentos ){
       if ( typeof letras === "string" ) {
         if ( letras === this.bafer ) return true;
-      } else if ( typeof letras === "Letras" ) {
+      } else if ( letras instanceof Letras ) {
         if ( letras.toString() === this.toString() ) return true;
-      }
+      } else throw new ParamError( "String | Letras" );
     }
     return false;
   }

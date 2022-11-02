@@ -5,7 +5,9 @@
  */
 
 // Importaciones
-const Letras = require( "./Letras.js" );
+const InstanceError = require( "./misc/InstanceError.js" );
+const ParamError    = require( "./misc/ParamError.js" );
+var Letras = null;
 
 class Letra {
 
@@ -21,8 +23,20 @@ class Letra {
   #posicion;
   #letras;
 
-  // Constructor
+  /**
+   * Inicializa un objeto <Letra>.
+   * @param { Letras } letras El conjunto de letras original al que pertenece.
+   * @param { int } posicion La posición original de la letra respecto al conjunto original.
+   * @throws { InstanceError } Si el genero recibido no forma parte de la colección.
+   */
   constructor( letras, posicion ) {
+
+    // Carga de dependencias.
+    Letras = require( "./Letras.js" );
+
+    // Inicialización.
+    if ( !( letras instanceof Letras ) ) throw new InstanceError( null, null, "Letras" );
+    if ( typeof posicion != "number" ) throw new InstanceError( null, null, "Number" );
     this.#posicion = posicion;
     this.#letras = letras;
   }
@@ -37,9 +51,11 @@ class Letra {
 
   /**
    * Cambia el caracter en la posición configurada por el caracter recibido.
-   * @param { char } ch El caracter que reemplazará al anterior.
+   * @param { string } ch El caracter que reemplazará al anterior.
+   * @throws { ParamError }
    */
   setChar( ch ) {
+    if ( typeof ch != "string" ) throw new ParamError( "String" );
     let bafer = this.#letras.bafer;
     this.#letras.bafer = bafer.substring( 0, this.#posicion ) + ch + bafer.substring( this.#posicion + ch.length );
   }
@@ -141,9 +157,11 @@ class Letra {
 
   /**
    * Cambia el caracter en la posición configurada por el caracter recibido.
-   * @param { char } ch El caracter que reemplazará al anterior.
+   * @param { string } ch El caracter que reemplazará al anterior.
+   * @throws { ParamError }
    */
   cambiar( ch ) {
+    if ( typeof ch != "string" ) throw new ParamError( "String" );
     this.setChar( ch );
   }
 
@@ -151,14 +169,15 @@ class Letra {
    * Verifica si la letra en la posición actual es igual a al menos una de las indicadas.
    * @param { * } argumentos La letras a comparar.
    * @returns { boolean } Si al menos una letra es igual a la letra actual.
+   * @throws { ParamError }
    */
   es( ...[ argumentos ] ) {
     for ( const caracter of argumentos ) {
       if ( typeof caracter === "string" ) {
         if ( this.getChar() === caracter ) return true;
-      } else if ( typeof caracter === "Letra" ) {
+      } else if ( caracter instanceof Letra ) {
         if ( this.getChar() === caracter.getChar() ) return true;
-      }
+      } else throw new ParamError( "String | Letra" );
     }
     return false;
   }

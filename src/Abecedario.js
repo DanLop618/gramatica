@@ -4,6 +4,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+// Importaciones
+const InstanceError = require( "./misc/InstanceError.js" );
+
 class Abecedario {
 
   /**
@@ -21,14 +24,21 @@ class Abecedario {
     4.80, 0.39, 0.01, // uvw
     0.06, 1.54, 0.15  // xyz
   ];
-  #letras = "abcdefghijklmnñopqrstuvwxyz";
+  #letras = [
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+    'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+  ];
   #ordinal;
   #letra;
 
-  // Constructor
+  /**
+   * Inicializa un objeto <Abecedario> que emula un <enum> de Java.
+   * @param { string } letra La letra interna de la clase.
+   * @throws { InstanceError } Si la letra recibida no forma parte de la colección.
+   */
   constructor( letra ) {
-    if ( !letra in this.#letras ) throw "¡Letra inválida!";
-    this.#ordinal = letras.indexOf( letra );
+    if ( !this.#letras.includes( letra ) ) throw new InstanceError( this.#letras, letra );
+    this.#ordinal = this.#letras.indexOf( letra );
     this.#letra = letra;
   }
 

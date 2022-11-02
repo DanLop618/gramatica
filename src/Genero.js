@@ -5,73 +5,11 @@
  */
 
 // Importaciones.
-const Palabra = require( "./Palabra.js" );
-
-// Terminación de las palabras.
-class Terminacion {
-
-  excepciones = [];
-  terminacion;
-  genero;
-
-  // Constructor
-  constructor( terminacion, genero, ...[ excepciones ] ) {
-    this.excepciones = excepciones;
-    this.terminacion = terminacion;
-    this.genero = genero;
-  }
-
-  /**
-   * Indica si la palabra recibida es una excepción a la regla.
-   * @param { Palabra } palabra La palabra a validar.
-   * @returns { boolean } Si es una excepción.
-   */
-  esExcepcion( palabra ) {
-    for ( const exception of excepciones )
-      if ( palabra.es( excepcion ) ) return true;
-    return false;
-  }
-
-  /**
-   * Sin datos.
-   * @param { Palabra } palabra
-   * @returns { boolean }
-   */
-  de( palabra ) {
-    return this.terminacion != null && palabra.acabaEn( this.terminacion );
-  }
-}
-
-// Lista de terminaciones | Terminaciones<Terminacion>
-class Terminaciones {
-
-  list = [];
-
-  // Contructor
-  constructor() {}
-
-  /**
-   * Agrega una nueva terminación a la lista e terminaciones.
-   * @param { string } terminacion La terminación de la palabra.
-   * @param { Genero } genero El género de la terminación.
-   * @param { string[] } excepciones Las excepciones a la regla.
-   */
-  agregar( terminacion, genero, ...[ excepciones ] ) {
-    this.list.push( new Terminacion( terminacion, genero, excepciones ) );
-  }
-
-  // Iterador
-  [ Symbol.iterator ]() {
-    let index = -1;
-    let data  = this.list;
-    return {
-      next: () => ({
-        value: data[ ++index ],
-        done:  index === data.length
-      })
-    };
-  }
-}
+const Palabra       = require( "./Palabra.js" );
+const Terminacion   = require( "./misc/Terminacion.js" );
+const Terminaciones = require( "./misc/Terminaciones.js" );
+const InstanceError = require( "./misc/InstanceError.js" );
+const ParamError    = require( "./misc/ParamError.js" );
 
 class Genero {
 
@@ -149,9 +87,13 @@ class Genero {
     this.#terminacionesPlurales.agregar( "ús", new Genero( "masculino" ) );
   }
 
-  // Constructor
+  /**
+   * Inicializa un objeto <Genero> que emula un <enum> de Java.
+   * @param { string } genero El tipo de genero interno de la clase.
+   * @throws { InstanceError } Si el genero recibido no forma parte de la colección.
+   */
   constructor( genero ) {
-    // if ( !genero in this.#generos ) throw new Error( "¡Género gramatical inválido!" );
+    if ( !this.#generos.includes( genero ) ) throw new InstanceError( this.#generos, genero );
     this.#ordinal = this.#generos.indexOf( genero );
     this.#genero = genero;
   }
@@ -160,8 +102,10 @@ class Genero {
    * Obtiene el género de la palabra.
    * @param { Palabra } palabra La palabra a verificar.
    * @returns { this } El género obtenido.
+   * @throws { ParamError }
    */
   static segunPalabra( palabra ) {
+    if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
     if ( palabra.estaVacia() ) return new Genero( "neutro" );
     if ( palabra.primeraLetra().esDigito() ) return new Genero( "masculino" );
     if ( palabra.numeroLetras() === 1 ) return new Genero( "femenino" );
@@ -177,8 +121,10 @@ class Genero {
    * Obtiene el género a usar delante de la palabra.
    * @param { Palabra } palabra La palabra a verificar.
    * @returns { this } El género obtenido.
+   * @throws { ParamError }
    */
   static antepuestoSegunPalabra( palabra ) {
+    if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
     const usarMasculinoEnVezFemenino =
       palabra.genero().esFemenino() &&
       palabra.numero().esSingular() &&

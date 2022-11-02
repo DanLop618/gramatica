@@ -6,6 +6,8 @@
 
 // Importaciones
 const Palabra = require( "./Palabra.js" );
+const InstanceError = require( "./misc/InstanceError.js" );
+const ParamError    = require( "./misc/ParamError.js" );
 
 class Preposicion {
 
@@ -20,9 +22,13 @@ class Preposicion {
   #ordinal;
   #tipo;
 
-  // Constructor
+  /**
+   * Inicializa un objeto <Preposicion> que emula un <enum> de Java.
+   * @param { string } tipo El tipo de preposición interno de la clase.
+   * @throws { InstanceError } Si la preposición recibida no forma parte de la colección.
+   */
   constructor( tipo ) {
-    // if ( !tipo in this.#tipos ) throw new Error( "¡Tipo de preposición inválido!" );
+    if ( !this.#tipos.includes( tipo ) ) throw new InstanceError( this.#tipos, tipo );
     this.#ordinal = this.#tipos.indexOf( tipo );
     this.#tipo = tipo;
   }
@@ -31,10 +37,10 @@ class Preposicion {
    * Indica si una palabra se trata de una preposición.
    * @param { Palabra } palabra La palabra a comparar.
    * @returns { boolean } Si la palabra es una preposición.
-   * @throws { Error } Si el tipo de dato ingresado no es compatible.
+   * @throws { ParamError }
    */
   static es( palabra ) {
-    // if ( !( palabra instanceof Palabra ) ) throw new Error( "TypeError: Expected type Palabra but " + typeof palabra + " was received." );
+    if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
     for ( const preposicion of this.#tipos )
       if ( preposicion === palabra.toString().toLowerCase() ) return true;
     return false;

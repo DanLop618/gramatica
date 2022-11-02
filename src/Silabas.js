@@ -5,6 +5,9 @@
  */
 
 // Importaciones
+const InstanceError = require( "./misc/InstanceError.js" );
+const ParamError    = require( "./misc/ParamError.js" );
+const Silaba        = require( "./misc/Silaba.js" );
 const Acentuacion = require( "./Acentuacion.js" );
 const Letras      = require( "./Letras.js" );
 const Palabra     = require( "./Palabra.js" );
@@ -18,9 +21,13 @@ class Silabas {
     "gl", "pl", "pr", "tr", "dr", "ch", "ll", "rr"
   ];
 
-  // Constructor
+  /**
+   * Inicializa un nuevo conjunto de Silabas[Silaba].
+   * @param { Palabra } palabra La palabra del conjunto.
+   * @throws { InstanceError } Si el elemento recibido no es de tipo <Palabra>.
+   */
   constructor( palabra ) {
-    //if ( !( palabra instanceof Palabra ) ) throw new Error( "TypeError: Expected type Palabra but " + typeof palabra + " was received." );
+    if ( !( palabra instanceof Palabra ) ) throw new InstanceError( null, null, "Palabra" );
     this.#palabra = palabra;
     if ( palabra.hayVocales() ) {
       this.#procesar1_SepararVocalesDeConsonantes();
@@ -28,7 +35,7 @@ class Silabas {
       this.#procesar3_ReglasSeparacionSilabica();
       this.#procesar4_DeterminarSilabaTonica();
     } else {
-      this.agregarProtosilaba( new this.Silaba( palabra.toString(), this ) );
+      this.agregarProtosilaba( new Silaba( palabra.toString(), this ) );
       this.primeraSilaba().marcarTonica();
     }
   }
@@ -37,12 +44,12 @@ class Silabas {
    * Creación de las protosílabas
    */
   #procesar1_SepararVocalesDeConsonantes() {
-    let protosilaba = new this.Silaba( "", this );
+    let protosilaba = new Silaba( "", this );
     let ultimaFueVocal = this.#palabra.primeraLetra().esVocal();
     for ( const letra of this.#palabra ) {
       if ( ( letra.esVocal() && !ultimaFueVocal ) || ( letra.esConsonante() && ultimaFueVocal ) ) {
         this.agregarProtosilaba( protosilaba );
-        protosilaba = new this.Silaba( "", this );
+        protosilaba = new Silaba( "", this );
       }
       protosilaba.agregar( letra );
       ultimaFueVocal = letra.esVocal();
@@ -114,10 +121,10 @@ class Silabas {
    * Obtiene la sílaba en la posición indicada.
    * @param { int } posicion La posición a evaluar.
    * @returns { Silaba } La sílaba obtenida.
-   * @throws { Error } Si el tipo de dato ingresado no es compatible.
+   * @throws { ParamError }
    */
   silaba( posicion ) {
-    // if ( !( posicion instanceof Int32 ) ) throw new Error( "TypeError: Expected type int but " + typeof posicion + " was received." );
+    if ( typeof posicion != "number" ) throw new ParamError( "Number" );
     return this.#list[ posicion ];
   }
 
@@ -192,10 +199,10 @@ class Silabas {
    * Elimina una sílaba del conjunto.
    * @param { Silaba } silaba La sílaba a eliminar.
    * @returns { boolean } Si la sílaba se eliminó correctamente.
-   * @throws { Error } Si el tipo de dato ingresado no es compatible.
+   * @throws { ParamError }
    */
   quitarSilaba( silaba ) {
-    // if ( !( silaba instanceof Silaba ) ) throw new Error( "TypeError: Expected type Silaba but " + typeof silaba + " was received." );
+    if ( !( silaba instanceof Silaba ) ) throw new ParamError( "Silaba" );
     if ( !this.#list.includes( silaba ) ) return false;
     this.#list = this.#list.filter( s => s != silaba );
     this.#palabra.cambiarPor( this.unirSilabas() );
@@ -214,10 +221,10 @@ class Silabas {
    * Devuelve las sílabas en forma de cadena de texto, separadas por el texto/caracter indicado.
    * @param { string } [ separador = "" ] El separador de cada sílaba.
    * @returns { string } La cadena de texto resultante.
-   * @throws { Error } Si el tipo de dato ingresado no es compátible.
+   * @throws { ParamError }
    */
   unirSilabas( separador = "" ) {
-    // if ( !( separador instanceof String ) ) throw new Error( "TypeError: Expected type string but " + typeof separador + " was received." );
+    if ( typeof separador != "string" ) throw new ParamError( "String" );
     let resultado = "";
     if ( !this.haySilabas() ) return resultado;
     for ( const silaba of this ) {
@@ -230,21 +237,45 @@ class Silabas {
   /**
    * Agrega una protosílaba al conjunto.
    * @param { Silaba } silaba La protosílaba a añadir.
-   * @throws { Error } Si el tipo de dato ingresado no es compatible.
+   * @throws { ParamError }
    */
   agregarProtosilaba( silaba ) {
-    // if ( !( silaba instanceof Silaba ) ) throw new Error( "TypeError: Expected type Silaba but " + typeof silaba + " was received." );
+    if ( !( silaba instanceof Silaba ) ) throw new ParamError( "Silaba" );
     this.#list.push( silaba );
   }
 
   /**
    * Indica si la sílaba ingresada es la sílaba tónica del conjunto.
    * @param { Silaba } silaba La sílaba a comparar.
-   * @throws { Error } Si el tipo de dato ingresado no es compatible.
+   * @throws { ParamError }
    */
   procesarSilabaTonica( silabaTonica ) {
-    // if ( !( silabaTonica instanceof Silaba ) ) throw new Error( "TypeError: Expected type Silaba but " + typeof silabaTonica + " was received." );
+    if ( !( silaba instanceof Silaba ) ) throw new ParamError( "Silaba" );
     for ( const silaba of this ) silaba.tonica = silaba === silabaTonica;
+  }
+
+  /**
+   * Getter se this.#palabra
+   * @returns { Palabra } this.#palabra
+   */
+  getPalabra() {
+    return this.#palabra;
+  }
+
+  /**
+   * Getter de this.#lista
+   * @returns { Silabas[] } this.#lista
+   */
+  getList() {
+    return this.#list;
+  }
+
+  /**
+   * Setter de this.#lista
+   * @param { Silabas[] } lista
+   */
+  setList( lista ) {
+    this.#list = lista;
   }
 
   // Iterador
@@ -257,147 +288,6 @@ class Silabas {
         done:  index === data.length
       })
     };
-  }
-
-  // Clase de Silaba.
-  Silaba = class Silaba extends Letras {
-
-    #parent;
-    tonica;
-
-    // Constructor.
-    constructor( silaba, parent ) {
-      super( silaba );
-      this.#parent = parent;
-      this.tonica = false;
-    }
-
-    /**
-     * Indica si la sílaba es tónica.
-     * @returns { boolean }
-     */
-    esTonica() {
-      return this.tonica;
-    }
-
-    /**
-     * Indica si la sílaba es átona.
-     * @returns { boolean }
-     */
-    esAtona() {
-      return !this.tonica;
-    }
-
-    /**
-     * Agrega una tilde a la sílaba.
-     * @returns { Silaba } La sílaba acentuada.
-     */
-    acentuar() {
-      if ( Silabas.this.hayVocales() ) this.#parent.ultimaVocal().ponerAcento();
-      this.#parent.procesarSilabaTonica( this );
-      this.#parent.#palabra.cambiarPor( this.#parent.unirSilabas() );
-    }
-
-    /**
-     * Elimina la tilde de la sílaba.
-     * @returns { Silaba } La sílaba sin acento.
-     */
-    quitarAcento() {
-      for ( const letra of this ) letra.quitarAcento();
-      this.#parent.procesarSilabaTonica( null );
-      this.#parent.#palabra.cambiarPor( this.#parent.unirSilabas() );
-    }
-
-    /**
-     * Marca la sílaba como atona.
-     */
-    marcarAtona() {
-      this.tonica = false;
-    }
-
-    /**
-     * Marca la sílaba como tónica.
-     */
-    marcarTonica() {
-      this.tonica = true;
-    }
-
-    /**
-     * Devuelve la sílaba siguiente del conjunto.
-     * @returns { Silaba } La sílaba siguiente.
-     */
-    siguiente() {
-      return this.#parent.#list[ this.#parent.#list.indexOf( this ) + 1 ];
-    }
-
-    /**
-     * Devuelve la sílaba anterior del conjunto.
-     * @returns { Silaba } La sílaba anterior.
-     */
-    anterior() {
-      return this.#parent.#list[ this.#parent.#list.indexOf( this ) - 1 ];
-    }
-
-    /**
-     * Junta la sílaba actual con la siguiente sílaba del conjunto.
-     * @returns { Silaba } La sílaba unificada.
-     */
-    juntarConSiguiente() {
-      const silabaSiguiente = this.siguiente();
-      this.agregar( silabaSiguiente.toString() );
-      this.#parent.#list = this.#parent.#list.filter( s => s != silabaSiguiente );
-      return this;
-    }
-
-    /**
-     * Parte la sílaba desde una posición dada.
-     * @param { int } posicion La posición.
-     * @returns { Silaba } La sílaba resultante.
-     * @throws { Error } Si el tipo de dato recibido no es compatible.
-     */
-    partir( posicion ) {
-      // if ( !( posicion instanceof Int32 ) ) throw new Error( "TypeError: Expected type int but " + typeof posicion + " was received." );
-      if ( posicion < 0 ) posicion = this.bafer.length + posicion;
-      const silabaSiguiente = new Silaba( this.bafer.substring( posicion, this.bafer.length ), this.#parent );
-      this.bafer = this.bafer.substring( 0, posicion );
-      this.#parent.#list.splice( this.#parent.#list.indexOf( this ) + 1, 0, silabaSiguiente );
-      return this;
-    }
-
-    /**
-     * Parte la sílaba desde el medio.
-     * @returns { Silaba } La sílaba resultante.
-     */
-    partirPorMedio() {
-      return this.partir( this.bafer.length / 2 );
-    }
-
-    /**
-     * Junta las sílabas adyacentes desde una posición dada.
-     * @param { int } posicion La posición desde la cual juntar.
-     * @throws { Error } Si el tipo de dato recibido no es compatible.
-     */
-    juntarAdyacentesPartiendoDesde( posicion ) {
-      return this.partir( posicion )
-      .anterior()
-      .juntarConSiguiente()
-      .siguiente()
-      .juntarConSiguiente();
-    }
-
-    /**
-     * Junta las sílabas adyacentes desde la mitad del conjunto.
-     */
-    juntarAdyacentesPartiendoPorMedio() {
-      return this.juntarAdyacentesPartiendoDesde( this.bafer.length / 2 );
-    }
-
-    /**
-     * Junta las sílabas adyacentes desde el final del conjunto.
-     */
-    juntarAdyacentesPartiendoDesdeFinal() {
-      return this.juntarAdyacentesPartiendoDesde( -2 );
-    }
   }
 }
 

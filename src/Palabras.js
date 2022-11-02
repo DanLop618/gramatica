@@ -7,6 +7,8 @@
 // Importaciones
 const Articulo = require( "./Articulo.js" );
 const Palabra  = require( "./Palabra.js" );
+const InstanceError = require( "./misc/InstanceError.js" );
+const ParamError    = require( "./misc/ParamError.js" );
 
 class Palabras {
 
@@ -15,11 +17,16 @@ class Palabras {
    */
   #list = [];
 
-  // Constructor
+  /**
+   * Inicializa un nuevo conjunto de Palabras[Palabra].
+   * @param { string[] | Palabras[] } palabras Las palabras del conjunto.
+   * @throws { InstanceError } Si uno de los elementos recibidos no es del tipo <String | Palabra>.
+   */
   constructor( ...[ palabras ] ) {
     for ( let palabra of palabras ) {
       if ( typeof palabra === "string" ) this.agregarPalabra( new Palabra( palabra ) );
-      if ( palabra instanceof Palabra ) this.agregarPalabra( palabra );
+      else if ( palabra instanceof Palabra ) this.agregarPalabra( palabra );
+      else throw new InstanceError( null, null, "String | Palabra" );
     }
   }
 
@@ -59,27 +66,30 @@ class Palabras {
    * Devuelve la palabra en la posición indicada.
    * @param { int } posicion La posición a evaluar.
    * @returns { Palabra } La palabra obtenida.
+   * @throws { ParamError }
    */
   palabra( posicion ) {
-    // if ( !( posicion instanceof Int32 ) ) throw new Error( "TypeError: Expected type int but " + typeof posicion + " was received." );
+    if ( typeof posicion != "number" ) throw new ParamError( "Number" );
     return this.#list[ posicion ];
   }
 
   /**
    * Agrega una palabra nueva al conjunto de palabras.
    * @param { Palabra } palabra La palabra a añadir.
+   * @throws { ParamError }
    */
   agregarPalabra( palabra ) {
-    // if ( !( palabra instanceof Palabra ) ) throw new Error( "TypeError: Expected type Palabra but " + typeof palabra + " was received." );
+    if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
     if ( !palabra.estaVacia() ) this.#list.push( palabra );
   }
 
   /**
    * Agrega una palabra nueva al conjunto de palabras al frente.
    * @param { Palabra } palabra La palabra a añadir.
+   * @throws { ParamError }
    */
   anteponerPalabra( palabra ) {
-    // if ( !( palabra instanceof Palabra ) ) throw new Error( "TypeError: Expected type Palabra but " + typeof palabra + " was received." );
+    if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
     if ( !palabra.estaVacia() ) this.#list.splice( 0, 0, palabra );
   }
 
@@ -87,9 +97,10 @@ class Palabras {
    * Elimina la palabra del conjunto de palabras si es que existe.
    * @param { Palabra } palabra La palabra a eliminar.
    * @returns { boolean } Si la palabra se eliminó correctamente.
+   * @throws { ParamError }
    */
   borrarPalabra( palabra ) {
-    // if ( !( palabra instanceof Palabra ) ) throw new Error( "TypeError: Expected type Palabra but " + typeof palabra + " was received." );
+    if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
     palabra = this.buscarPalabra( palabra );
     if ( palabra.estaVacia() ) return false;
     this.#list = this.#list.filter( p => p.toString() != palabra.toString() );
@@ -100,9 +111,10 @@ class Palabras {
    * Agrega una palabra sin duplicarla.
    * @param { Palabra } palabra La palabra a añadir.
    * @returns { boolean } Si la palabra se añadió correctamente.
+   * @throws { ParamError }
    */
   agregarPalabraSinDuplicar( palabra ) {
-    // if ( !( palabra instanceof Palabra ) ) throw new Error( "TypeError: Expected type Palabra but " + typeof palabra + " was received." );
+    if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
     if ( this.existePalabra( palabra ) ) return false;
     this.agregarPalabra( palabra );
     return true;
@@ -112,9 +124,10 @@ class Palabras {
    * Busca una palabra en el conjunto de palabras. Devuelve una palabra vacía si no se encuentra.
    * @param { Palabra } palabra La palabra a buscar.
    * @returns { Palabra } La palabra obtenida.
+   * @throws { ParamError }
    */
   buscarPalabra( palabra ) {
-    // if ( !( palabra instanceof Palabra ) ) throw new Error( "TypeError: Expected type Palabra but " + typeof palabra + " was received." );
+    if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
     for ( const p of this ) if ( p.es( palabra ) ) return p;
     return new Palabra();
   }
@@ -123,19 +136,20 @@ class Palabras {
    * Busca una palabra en el conjunto de palabras para verificar su existencia.
    * @param { Palabra } palabra La palabra a buscar.
    * @returns { boolean } Si la palabra existe o no.
+   * @throws { ParamError }
    */
   existePalabra( palabra ) {
-    // if ( !( palabra instanceof Palabra ) ) throw new Error( "TypeError: Expected type Palabra but " + typeof palabra + " was received." );
+    if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
     return !this.buscarPalabra( palabra ).estaVacia();
   }
 
   /**
    * Obtiene las palabras separadas por espacios o por su capitalización para añadirlas al conjunto.
    * @param { string } palabras La cadena de texto a procesar.
-   * @throws { Error } Si el tipo de dato recibido no es compatible.
+   * @throws { ParamError }
    */
   procesarPalabras( palabras ) {
-    // if ( !( palabras instanceof String ) ) throw new Error( "TypeError: Expected type string but " + typeof palabras + " was received." );
+    if ( typeof palabras != "string" ) throw new ParamError( "String" );
     palabras = palabras.trim().replace( '_', ' ' );
     for ( let posicionInicial = 0, posicionEspacio; posicionInicial < palabras.length; posicionInicial = posicionEspacio + 1 ) {
       posicionEspacio = palabras.indexOf( ' ', posicionInicial );
@@ -148,10 +162,10 @@ class Palabras {
   /**
    * Obtiene las palabras separadas por su capitalización para añadirlas al conjunto.
    * @param { string } palabra La cadena de texto a procesar.
-   * @throws { Error } Si el tipo de dato recibido no es compatible.
+   * @throws { ParamError }
    */
   procesarPalabrasCapitales( palabra ) {
-    // if ( !( palabra instanceof String ) ) throw new Error( "TypeError: Expected type string but " + typeof palabra + " was received." );
+    if ( typeof palabra != "number" ) throw new ParamError( "String" );
     let bafer = "";
     let ultimaFueMinuscula = palabra[ 0 ] === palabra[ 0 ].toLowerCase();
     for ( let i = 0; i < palabra.length; ++i ) {
@@ -170,10 +184,10 @@ class Palabras {
    * Enumera las palabras con concepto indicado.
    * @param { Palabra } concepto El concepto a utilizar.
    * @returns { string } La cadena de texto resultante.
-   * @throws { Error } Si el tipo de dato recibido no es compatible.
+   * @throws { ParamError }
    */
   enumerarConcepto( concepto ) {
-    // if ( !( concepto instanceof Palabra ) ) throw new Error( "TypeError: Expected type Palabra but " + typeof concepto + " was received." );
+    if ( !( concepto instanceof Palabra ) ) throw new ParamError( "Palabra" );
     let bafer = "";
     if ( !this.numeroPalabras() ) {
       if ( concepto.generoAntepuesto().esFemenino() ) bafer += `ninguna ${ concepto }`;
@@ -191,10 +205,10 @@ class Palabras {
    * Enumera las palabras separándolas con comas, excepto entre las dos últimas palabras que se separan con la conjunción "y".
    * @param { Articulo } [ articulo = null ] El articulo a utilizar.
    * @returns { string } La cadena de texto resultante.
-   * @throws { Error } Si el tipo de dato recibido no es compatible.
+   * @throws { ParamError }
    */
   enumerar( articulo = null ) {
-    // if ( articulo && !( articulo instanceof Articulo ) ) throw new Error( "TypeError: Expected type Articulo but " + typeof articulo + " was received." );
+    if ( !( articulo instanceof Articulo ) ) throw new ParamError( "Articulo" );
     let stringBuilder = "";
     for ( const palabra of this ) {
       if ( palabra != this.primeraPalabra() ) {
@@ -236,10 +250,11 @@ class Palabras {
    * @param { string } [ elementoUnion = ', ' ] La unión entre cada elemento.
    * @param { callback } [ maquillador = null ] La función maquilladora.
    * @returns { string } La cadena resultante.
+   * @throws { ParamError }
    */
   unir( elementoUnion = ", ", maquillador = null ) {
-    // if ( !( elementoUnion instanceof String ) ) throw new Error( "TypeError: Expected type string but " + typeof elementoUnion + " was received." );
-    // if ( maquillador && !( maquillador instanceof Object ) ) throw new Error( "TypeError: Expected type function but " + typeof maquillador + " was received." );
+    if ( typeof elementoUnion != "string" ) throw new ParamError( "String" );
+    if ( typeof maquillador != "function" ) throw new ParamError( "Function" );
     let bafer = "";
     let texto = "";
     if ( !this.hayPalabras() ) return bafer;

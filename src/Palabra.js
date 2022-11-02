@@ -5,11 +5,13 @@
  */
 
 // Importaciones
-const Articulo = require( "./Articulo.js" );
-const Genero   = require( "./Genero.js" );
-const Letras   = require( "./Letras.js" );
-const Numero   = require( "./Numero.js" );
-const Silabas  = require( "./Silabas.js" );
+const InstanceError = require( "./misc/InstanceError.js" );
+const ParamError    = require( "./misc/ParamError.js" );
+const Letras = require( "./Letras.js" );
+var Articulo = null;
+var Genero   = null;
+var Numero   = null;
+var Silabas  = null;
 
 class Palabra extends Letras {
 
@@ -18,9 +20,21 @@ class Palabra extends Letras {
   #genero;
   #numero;
 
-  // Constructor
+  /**
+   * Inicializa un objeto <Palabra>.
+   * @param { string } palabra El contenido de la palabra.
+   * @throws { InstanceError } Si el tipo de dato ingresado no es de tipo <String>.
+   */
   constructor( palabra = "" ) {
-    // if ( !( palabra instanceof String ) ) throw new Error( "TypeError: Expected type string but " + typeof palabra + " was received" );
+
+    // Carga de dependencias.
+    Articulo = require( "./Articulo.js" );
+    Genero   = require( "./Genero.js" );
+    Numero   = require( "./Numero.js" );
+    Silabas  = require( "./Silabas.js" );
+
+    // Inicialización del objeto.
+    if ( typeof palabra != "string" ) throw new InstanceError( null, null, "String" );
     super( palabra.toLowerCase() );
     this.#original = palabra;
     this.#silabas = null;
@@ -41,8 +55,10 @@ class Palabra extends Letras {
    * Verifica si la palabra es igual al objeto ingresado.
    * @param { Object } objeto El objeto a comparar.
    * @returns { boolean } Si la palabra es idéntica al objeto.
+   * @throws { ParamError }
    */
   equals( objeto ) {
+    if ( typeof objeto != "object" ) throw new ParamError( "Object" );
     return object ? object.toString() === this.toString() : false;
   }
 
@@ -50,10 +66,11 @@ class Palabra extends Letras {
    * Crea un duplicado de la palabra. Si un texto es recibido, éste se cambiará.
    * @param { string } [ texto = null ] El nuevo texto
    * @returns { this } La palabra duplicada.
+   * @throws { ParamError }
    */
   clonar( texto = null ) {
     if ( !texto ) texto = this.bafer;
-    // if ( !( texto instanceof String ) ) throw new Error( "TypeError: Expected type string but " + typeof texto + " was received" );
+    if ( typeof texto != "string" ) throw new ParamError( "String" );
     const palabra = new Palabra( texto );
     palabra.#genero = this.#genero;
     palabra.#numero = this.#numero;
@@ -102,18 +119,20 @@ class Palabra extends Letras {
   /**
    * Cambia el género gramatical de la palabra por el indicado.
    * @param { Genero } genero El nuevo género gramatical.
+   * @throws { ParamError }
    */
   cambiarGenero( genero ) {
-    // if ( !( genero instanceof Genero ) ) throw new Error( "TypeError: Expected type Genero but " + typeof genero + " was received." );
+    if ( !( genero instanceof Genero ) ) throw new ParamError( "Genero" );
     this.#genero = genero;
   }
 
   /**
    * Cambia la numeración gramatical de la palabra por el indicado.
    * @param { Numero } numero La nueva numeración gramatical.
+   * @throws { ParamError }
    */
   cambiarNumero( numero ) {
-    // if ( !( numero instanceof Numero ) ) throw new Error( "TypeError: Expected type Numero but " + typeof numero + " was received." );
+    if ( !( numero instanceof Numero ) ) throw new ParamError( "Numero" );
     this.#numero = numero;
   }
 
@@ -121,8 +140,10 @@ class Palabra extends Letras {
    * Devuelve el articulo gramatical de la palabra.
    * @param { string } [ tipo = "determinado" ] El tipo de articulo gramatical.
    * @returns { Articulo } El articulo gramatical.
+   * @throws { ParamError }
    */
   articulo( tipo = "determinado" ) {
+    if ( typeof tipo != "string" ) throw new ParamError( "String" );
     return new Articulo( tipo ).segunPalabra( this );
   }
 
@@ -216,9 +237,10 @@ class Palabra extends Letras {
    * Cuantifica la palabra dependiendo del número de elementos indicado.
    * @param { int } numeroElementos El número de elementos.
    * @returns { string } La cadena de texto resultante.
+   * @throws { ParamError }
    */
   cuantificar( numeroElementos ) {
-    // if ( !( numeroElementos instanceof Int32 ) ) throw new Error( "TypeError: Expected type int but " + typeof numeroElementos + " was received" );
+    if ( typeof numeroElementos != "number" ) throw new ParamError( "Number" );
     if ( numeroElementos === Number.MAX_VALUE ) {
       if ( this.generoAntepuesto().esFemenino() ) return "todas las " + this.enPlural();
       return "todos los " + this.enPlural();
@@ -243,9 +265,10 @@ class Palabra extends Letras {
    * Devuelve la palabra con el articulo gramatical correspondiente antepuesto.
    * @param { Articulo } articulo El articulo gramatical
    * @returns { string } La cadena de texto resultante.
+   * @throws { ParamError }
    */
   anteponerArticulo( articulo ) {
-    // if ( !( articulo instanceof Articulo ) ) throw new Error( "TypeError: Expected type Articulo but " + typeof articulo + " was received." );
+    if ( !( articulo instanceof Articulo ) ) throw new ParamError( "Articulo" );
     return articulo.agregarPalabra( this );
   }
 
@@ -253,9 +276,10 @@ class Palabra extends Letras {
    * Devuelve la palabra con el articulo gramatical correspondiente antepuesto junto con "de".
    * @param { Articulo } articulo El articulo gramatical
    * @returns { string } La cadena de texto resultante.
+   * @throws { ParamError }
    */
   anteponerDe( articulo ) {
-    // if ( !( articulo instanceof Articulo ) ) throw new Error( "TypeError: Expected type Articulo but " + typeof articulo + " was received." );
+    if ( !( articulo instanceof Articulo ) ) throw new ParamError( "Articulo" );
     if ( articulo.casoArticuloContracto( this ) ) return "del " + this;
     return "de " + articulo.agregarPalabra( this );
   }
@@ -264,9 +288,10 @@ class Palabra extends Letras {
    * Devuelve la palabra con el articulo gramatical correspondiente antepuesto junto con "a".
    * @param { Articulo } articulo El articulo gramatical
    * @returns { string } La cadena de texto resultante.
+   * @throws { ParamError }
    */
   anteponerA( articulo ) {
-    // if ( !( articulo instanceof Articulo ) ) throw new Error( "TypeError: Expected type Articulo but " + typeof articulo + " was received." );
+    if ( !( articulo instanceof Articulo ) ) throw new ParamError( "Articulo" );
     if ( articulo.casoArticuloContracto( this ) ) return "al " + this;
     return "a " + articulo.agregarPalabra( this );
   }
@@ -275,9 +300,10 @@ class Palabra extends Letras {
    * Devuelve la palabra en mayúsculas según el patrón recibido.
    * @param { string } patron El patrón de conversión.
    * @returns { string } La cadena de texto resultante.
+   * @throws { ParamError }
    */
   enMayusculasSegunPatron( patron ) {
-    // if ( !( patron instanceof String ) ) throw new Error( "TypeError: Expected type string but " + typeof patron + " was received" );
+    if ( typeof patron != "string" ) throw new ParamError( "String" );
     let destino = this.bafer;
     let enMayusculas = false;
     for ( let indice = 0; indice < destino.length; ++indice ) {

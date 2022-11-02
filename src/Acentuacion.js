@@ -4,6 +4,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+// Importaciones
+const InstanceError = require( "./misc/InstanceError.js" );
+
 class Acentuacion {
 
   /**
@@ -13,9 +16,13 @@ class Acentuacion {
   #ordinal;
   #acento;
 
-  // Constructor
+  /**
+   * Inicializa un objeto <Acento> que emula un <enum> de Java.
+   * @param { string } acento El tipo de acento interno de la clase.
+   * @throws { InstanceError } Si el acento recibido no forma parte de la colección.
+   */
   constructor( acento ) {
-    // if ( !acento in this.#acentos ) throw new Error( "¡Tipo de acentuación inválida!" );
+    if ( !this.#acentos.includes( acento ) ) throw new InstanceError( this.#acentos, acento );
     this.#ordinal = this.#acentos.indexOf( acento );
     this.#acento = acento;
   }

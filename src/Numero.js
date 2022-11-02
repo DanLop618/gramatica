@@ -6,6 +6,8 @@
 
 // Importaciones
 const Palabra = require( "./Palabra.js" );
+const InstanceError = require( "./misc/InstanceError.js" );
+const ParamError    = require( "./misc/ParamError.js" );
 
 class Numero {
 
@@ -44,9 +46,13 @@ class Numero {
     "rascacielos"
   ];
 
-  // Constructor
+  /**
+   * Inicializa un objeto <Numero> que emula un <enum> de Java.
+   * @param { string } tipo El tipo de numeracion interno de la clase.
+   * @throws { InstanceError } Si la numeracion recibida no forma parte de la colección.
+   */
   constructor( tipo ) {
-    // if ( !tipo in this.#tipos ) throw new Error( "¡Tipo de numeración inválida!" );
+    if ( !this.#tipos.includes( tipo ) ) throw new InstanceError( this.#tipos, tipo );
     this.#ordinal = this.#tipos.indexOf( tipo );
     this.#tipo = tipo;
   }
@@ -55,8 +61,10 @@ class Numero {
    * Obtiene la numeración gramatical de la palabra ingresada.
    * @param { Palabra } palabra La palabra a verificar.
    * @returns { this } La numeración gramatical obtenida.
+   * @throws { ParamError }
    */
   static segunPalabra( palabra ) {
+    if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
     if ( palabra.estaVacia() ) return new Numero( "singular" );
     if ( palabra.es( this.#excepcionesSingulares ) ) return new Numero( "singular" );
     if ( palabra.es( this.#excepcionesPlurales ) ) return new Numero( "plural" );
