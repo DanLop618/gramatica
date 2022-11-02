@@ -87,7 +87,7 @@ class Silabas {
       if ( silaba.numeroLetras() === 1 ) {
         silaba.juntarConSiguiente();
       } else if ( silaba.numeroLetras() === 2 ) {
-        if ( silaba in this.DOS_CONSONANTES_INDIVISIBLES ) silaba.juntarConSiguiente();
+        if ( this.DOS_CONSONANTES_INDIVISIBLES.includes( silaba.toString() ) ) silaba.juntarConSiguiente();
         else silaba.juntarAdyacentesPartiendoPorMedio();
       } else if ( silaba.acabaEn( ...this.DOS_CONSONANTES_INDIVISIBLES ) ) {
         silaba.juntarAdyacentesPartiendoDesdeFinal();
