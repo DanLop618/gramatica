@@ -41,5 +41,5 @@ Todas las colaboraciones, ideas e implementaciones son totalmente bienvenidas. S
 
 Información Extra
 -----------------
-[Francisco Cascales](https://proinf.net/)
-Este proyecto es distribuido usando la [Licencia Mozilla 2.0](http://mozilla.org/MPL/2.0/).
+- Autor Original: [Francisco Cascales](https://proinf.net/)
+- Este proyecto es distribuido usando la [Licencia Mozilla 2.0](http://mozilla.org/MPL/2.0/).
