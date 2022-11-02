@@ -112,7 +112,8 @@ class Silaba extends Letras {
     if ( posicion < 0 ) posicion = this.bafer.length + posicion;
     const silabaSiguiente = new Silaba( this.bafer.substring( posicion, this.bafer.length ), this.#parent );
     this.bafer = this.bafer.substring( 0, posicion );
-    this.#parent.setList( this.#parent.getList().splice( this.#parent.getList().indexOf( this ) + 1, 0, silabaSiguiente ) );
+    const list = this.#parent.getList();
+    list.splice( list.indexOf( this ) + 1, 0, silabaSiguiente )
     return this;
   }
 
@@ -132,10 +133,10 @@ class Silaba extends Letras {
   juntarAdyacentesPartiendoDesde( posicion ) {
     if ( typeof posicion != "number" ) throw new ParamError( "Number" );
     return this.partir( posicion )
-    .anterior()
-    .juntarConSiguiente()
-    .siguiente()
-    .juntarConSiguiente();
+      .anterior()
+      .juntarConSiguiente()
+      .siguiente()
+      .juntarConSiguiente();
   }
 
   /**
