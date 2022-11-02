@@ -194,7 +194,7 @@ class Palabras {
       else bafer += `ningún ${ concepto }`;
     } else {
       if ( this.numeroPalabras() != 1 ) concepto = concepto.enPlural();
-      bafer += concepto.anteponerArticulo( new Articulo( "determinado" ) );
+      bafer += concepto.anteponerArticulo( Articulo.determinado );
       if ( this.numeroPalabras() >= 3 ) bafer += ":";
       bafer += ` ${ this.enumerar( null ) }`;
     }
@@ -203,11 +203,11 @@ class Palabras {
 
   /**
    * Enumera las palabras separándolas con comas, excepto entre las dos últimas palabras que se separan con la conjunción "y".
-   * @param { Articulo } [ articulo = null ] El articulo a utilizar.
+   * @param { Articulo } [ articulo = Articulo.determinado ] El articulo a utilizar.
    * @returns { string } La cadena de texto resultante.
    * @throws { ParamError }
    */
-  enumerar( articulo = null ) {
+  enumerar( articulo = Articulo.determinado ) {
     if ( !( articulo instanceof Articulo ) ) throw new ParamError( "Articulo" );
     let stringBuilder = "";
     for ( const palabra of this ) {

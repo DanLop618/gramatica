@@ -82,7 +82,7 @@ class Palabra extends Letras {
    * @returns { string } La palabra en su forma plural.
    */
   procesarPlural() {
-    this.#numero = new Numero( "plural" );
+    this.#numero = Numero.plural;
     if ( this.estaVacia() || !this.hayVocales() ) return this;
     if ( this.ultimaLetra().esConsonante() ) {
       if ( this.ultimaLetra().es( 'z' ) ) {
@@ -138,13 +138,14 @@ class Palabra extends Letras {
 
   /**
    * Devuelve el articulo gramatical de la palabra.
-   * @param { string } [ tipo = "determinado" ] El tipo de articulo gramatical.
+   * @param { Articulo | string } [ tipo = Articulo.determinado ] El tipo de articulo gramatical.
    * @returns { Articulo } El articulo gramatical.
    * @throws { ParamError }
    */
   articulo( tipo = "determinado" ) {
-    if ( typeof tipo != "string" ) throw new ParamError( "String" );
-    return new Articulo( tipo ).segunPalabra( this );
+    if ( typeof tipo != "string" && !( tipo instanceof Articulo ) ) throw new ParamError( "Articulo | String" );
+    if ( tipo instanceof Articulo ) return articulo.segunPalabra( this );
+    else return Articulo[ tipo ].segunPalabra( this );
   }
 
   /**

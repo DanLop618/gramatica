@@ -121,14 +121,15 @@ class Gramatica {
   /**
    * Concatena la palabra ingresada con su articulo gramatical.
    * @param { string } palabra La plabra a utilizar.
-   * @param { string } [ articulo = "determinado" ] El tipo articulo gramatical a utilizar.
+   * @param { Articulo | string } [ articulo = Articulo.determinado ] El tipo articulo gramatical a utilizar.
    * @returns { string } Las palabra y su articulo gramatical concatenados.
    * @throws { ParamError }
    */
-  static articulo( palabra, articulo = "determinado" ) {
+  static articulo( palabra, articulo = Articulo.determinado ) {
     if ( typeof palabra != "string" ) throw new ParamError( "String" );
-    if ( typeof articulo != "string" ) throw new ParamError( "String" );
-    return new Articulo( articulo ).agregarPalabra( new Palabra( palabra ) );
+    if ( typeof articulo != "string" && !( articulo instanceof Articulo ) ) throw new ParamError( "Articulo | String" );
+    if ( articulo instanceof Articulo ) return articulo.agregarPalabra( new Palabra( palabra ) );
+    else return Articulo[ articulo ].agregarPalabra( new Palabra( palabra ) );
   }
 
   /**

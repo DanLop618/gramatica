@@ -189,10 +189,10 @@ class Silabas {
    * @returns { Acentuacion } La sílaba obtenida.
    */
   acentuacion() {
-    if ( this.numeroSilabas() >= 1 && this.ultimaSilaba().esTonica() ) return new Acentuacion( "aguda" );
-    if ( this.numeroSilabas() >= 2 && this.penultimaSilaba().esTonica() ) return new Acentuacion( "llana" );
-    if ( this.numeroSilabas() >= 3 && this.antepenultimaSilaba().esTonica() ) return new Acentuacion( "esdrújula" );
-    return new Acentuacion( "sobreesdrújula" );
+    if ( this.numeroSilabas() >= 1 && this.ultimaSilaba().esTonica() ) return Acentuacion.aguda;
+    if ( this.numeroSilabas() >= 2 && this.penultimaSilaba().esTonica() ) return Acentuacion.llana;
+    if ( this.numeroSilabas() >= 3 && this.antepenultimaSilaba().esTonica() ) return Acentuacion.esdrújula;
+    return Acentuacion.sobreesdrújula
   }
 
   /**
