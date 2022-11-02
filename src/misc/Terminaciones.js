@@ -22,8 +22,8 @@ class Terminaciones {
    * @param { Genero } genero El tipo de género de la terminación.
    * @param { string[] } excepciones Las excepciones a la regla.
    */
-  agregar( terminacion, genero, ...[ excepciones ] ) {
-    this.list.push( new Terminacion( terminacion, genero, excepciones ) );
+  agregar( terminacion, genero, ...excepciones ) {
+    this.list.push( new Terminacion( terminacion, genero, ...excepciones ) );
   }
 
   // Iterador

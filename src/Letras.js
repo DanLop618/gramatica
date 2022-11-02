@@ -234,7 +234,7 @@ class Letras {
    * @returns { boolean } Si uno de los conjuntos ingresados es idéntico al actual.
    * @throws { ParamError }
    */
-  es( argumentos ) {
+  es( ...argumentos ) {
     for ( const letras of argumentos ){
       if ( typeof letras === "string" ) {
         if ( letras === this.bafer ) return true;

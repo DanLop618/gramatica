@@ -35,10 +35,7 @@ class Terminacion {
    */
   esExcepcion( palabra ) {
     if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
-    for ( const excepcion of this.excepciones ) {
-      if ( !excepcion ) continue;
-      if ( palabra.es( excepcion ) ) return true;
-    }
+    for ( const excepcion of this.excepciones ) if ( palabra.es( excepcion ) ) return true;
     return false;
   }
 

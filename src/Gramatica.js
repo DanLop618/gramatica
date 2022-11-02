@@ -103,7 +103,7 @@ class Gramatica {
    */
   static enumerar( articulo, ...palabras ) {
     if ( !( articulo instanceof Articulo ) ) throw new ParamError( "Articulo" );
-    return new Palabras( palabras ).enumerar( articulo );
+    return new Palabras( ...palabras ).enumerar( articulo );
   }
 
   /**
@@ -115,7 +115,7 @@ class Gramatica {
    */
   static enumerarConcepto( concepto, ...palabras ) {
     if ( typeof concepto != "string" ) throw new ParamError( "String" );
-    return new Palabras( palabras ).enumerarConcepto( new Palabra( concepto ) );
+    return new Palabras( ...palabras ).enumerarConcepto( new Palabra( concepto ) );
   }
 
   /**
@@ -138,7 +138,7 @@ class Gramatica {
    * @throws { ParamError }
    */
   static unirPluralesCapitalizando( ...palabras ) {
-    return new Palabras( palabras ).unirPluralesCapitalizando();
+    return new Palabras( ...palabras ).unirPluralesCapitalizando();
   }
 
   /**
@@ -148,7 +148,7 @@ class Gramatica {
    * @throws { ParamError }
    */
   static unirPluralesGuionando( ...palabras ) {
-    return new Palabras( palabras ).unirPluralesGuionando();
+    return new Palabras( ...palabras ).unirPluralesGuionando();
   }
 }
 

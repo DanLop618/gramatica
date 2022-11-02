@@ -65,9 +65,11 @@ class Numero {
    */
   static segunPalabra( palabra ) {
     if ( !( palabra instanceof Palabra ) ) throw new ParamError( "Palabra" );
+    const singulares = this.#excepcionesSingulares;
+    const plurales   = this.#excepcionesPlurales;
     if ( palabra.estaVacia() ) return new Numero( "singular" );
-    if ( palabra.es( this.#excepcionesSingulares ) ) return new Numero( "singular" );
-    if ( palabra.es( this.#excepcionesPlurales ) ) return new Numero( "plural" );
+    if ( palabra.es( ...singulares ) ) return new Numero( "singular" );
+    if ( palabra.es( ...plurales ) ) return new Numero( "plural" );
     if ( palabra.acabaEn( "nés" ) ) return new Numero( "singular" );
     if ( palabra.ultimaLetra().es( 's' ) ) return new Numero( "plural" );
     return new Numero( "singular" );

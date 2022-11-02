@@ -171,7 +171,7 @@ class Letra {
    * @returns { boolean } Si al menos una letra es igual a la letra actual.
    * @throws { ParamError }
    */
-  es( ...[ argumentos ] ) {
+  es( ...argumentos ) {
     for ( const caracter of argumentos ) {
       if ( typeof caracter === "string" ) {
         if ( this.getChar() === caracter ) return true;
