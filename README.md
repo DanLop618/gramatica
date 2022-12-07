@@ -4,7 +4,7 @@ Gramática: número, género y acentuación
 Librería de *JavaScript* que implementa las reglas gramaticales. Las clases y funciones disponibles sirven para verificar la existencia de una palabra, obtener las posibles correcciones de la misma, pluralizarla, descomponerla en sílabas, indicar si su acento es agudo, llano, esdrújulo o sobreesdrújulo, entre otras cosas.
 
 ### Importante:
-Ésta librería esta fuertemente inspirada por [Leus: Gramática](https://github.com/leus/gramatica). La misma, está pensada para seguir completándose, hacerse más robusta y poder ser implementada en cualquier proyecto en la que sea útil.
+Esta librería está fuertemente inspirada por [Leus: Gramática](https://github.com/leus/gramatica). La misma, está pensada para seguir completándose, hacerse más robusta y poder ser implementada en cualquier proyecto en la que sea útil.
 
 Ejemplos de uso:
 
