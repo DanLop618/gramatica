@@ -6,19 +6,25 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DanLop618/gramatica.git"
-  },
   "keywords": [
     "gramatica",
     "rae",
     "español"
   ],
   "author": "danlop_",
-  "license": "ISC",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanLop618/gramatica.git"
+  },
   "bugs": {
     "url": "https://github.com/DanLop618/gramatica/issues"
   },
-  "homepage": "https://github.com/DanLop618/gramatica#readme"
+  "homepage": "https://github.com/DanLop618/gramatica#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
+    "ws": "^8.11.0"
+  }
 }

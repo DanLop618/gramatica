@@ -9,10 +9,36 @@ const Articulo = require( "./Articulo.js" );
 const Palabras = require( "./Palabras.js" );
 const Palabra  = require( "./Palabra.js" );
 const Silabas  = require( "./Silabas.js" );
+const HttpInterface = require( "./interfaces/HttpInterface.js" );
 const InstanceError = require( "./misc/InstanceError.js" );
 const ParamError    = require( "./misc/ParamError.js" );
 
 class Gramatica {
+
+  /**
+   * Verifica si la palabra ingresada existe realmente.
+   * @param { string } palabra La palabra a verificar.
+   * @returns { Promise<Cabecera[]|null> } Si existe o no.
+   * @throws { ParamError }
+   */
+  static async existe( palabra ) {
+    if ( typeof palabra != "string" ) throw new ParamError( "String" );
+    const coincidencias = await HttpInterface.request( `search?w=${ palabra }&m=30` );
+    if ( !coincidencias.length ) return false;
+    return coincidencias;
+  }
+
+  /**
+   * Obtiene la lista de correcciones.
+   * @param { string } palabra La palabra a verificar.
+   * @returns { Promise<[Cabecera[]]> }
+   * @throws { ParamError }
+   */
+  static async correcciones( palabra ) {
+    if ( typeof palabra != "string" ) throw new ParamError( "String" );
+    const coincidencias = await HttpInterface.request( `keys?q=${ palabra }&callback=jsonp123` );
+    return coincidencias;
+  }
 
   /**
    * Devuelve el plural de la palabra ingresada.
